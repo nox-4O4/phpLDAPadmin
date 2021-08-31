@@ -44,8 +44,8 @@ $actionErrorMsg = array(
 $request['page'] = new PageRender($app['server']->getIndex(),get_request('template','REQUEST',false,'none'));
 $request['page']->drawTitle(sprintf('<b>%s</b>',_('Import')));
 $request['page']->drawSubTitle(sprintf('%s: <b>%s</b> %s: <b>%s %s %s (%s)</b>',
-	_('Server'),$app['server']->getName(),
-	_('File'),$request['import']->getSource('name'),number_format($request['import']->getSource('size')),_('bytes'),$type['description']));
+	_('Server'), htmlspecialchars($app['server']->getName()),
+	_('File'), htmlspecialchars($request['import']->getSource('name')),number_format($request['import']->getSource('size')),_('bytes'),$type['description']));
 
 echo '<br />';
 
@@ -76,7 +76,7 @@ while (! $request['import']->eof()) {
 
 	if ($request['import']->error) {
 		printf('<small><span style="color:red;">%s: %s</span></small><br />',
-			_('Error'),$request['import']->error['message']);
+			_('Error'), htmlspecialchars($request['import']->error['message']));
 
 		echo '<br/>';
 
@@ -98,12 +98,12 @@ function display_pla_parse_error($request) {
 	printf('<td><h2>%s %s</h2></td>',$type['description'],_('Parse Error'));
 	echo '</tr>';
 
-	printf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Description'),$request->error['message']);
+	printf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Description'), htmlspecialchars($request->error['message']));
 	printf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Line'),$request->error['line']);
 	printf('<tr><td colspan=2><b>%s</b>:</td></tr>',_('Data'));
 
 	foreach ($request->error['data'] as $line)
-		printf('<tr><td>&nbsp;</td><td>%s</td></tr>',$line);
+		printf('<tr><td>&nbsp;</td><td>%s</td></tr>', htmlspecialchars($line));
 
 	echo '</table>';
 	echo '</center>';

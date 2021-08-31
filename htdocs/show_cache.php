@@ -35,15 +35,15 @@ if (! $_SESSION[APPCONFIG]->getValue('appearance','hide_debug_info')) {
 		if ((in_array($key,array('cache'))) && is_array($request['dumpvar'][$key]))
 			foreach (array_keys($request['dumpvar'][$key]) as $server) {
 				foreach (array_keys($request['dumpvar'][$key][$server]) as $x) {
-					$index = sprintf('%s:%s',$server,$x);
+					$index = sprintf('%s:%s',htmlspecialchars($server), htmlspecialchars($x));
 
 					printf('<li><span id="%s"><a href="javascript:get(\'%s\',\'%s\');">%s</a></span><div id="%sloading" style="display: none" ></div></li>',
-						$key.$index,$key,$index,$key.'.'.$index,$key.$index,$key.$index);
+					       htmlspecialchars($key.$index,$key,$index), htmlspecialchars($key.'.'.$index), htmlspecialchars($key.$index), htmlspecialchars($key.$index));
 				}
 			}
 		else
 			printf('<li><span id="%s"><a href="javascript:get(\'%s\',\'\');">%s</a></span><div id="%sloading" style="display: none" ></div></li>',
-				$key,$key,$key,$key);
+			       htmlspecialchars($key), htmlspecialchars($key), htmlspecialchars($key), htmlspecialchars($key));
 	}
 	echo '</ul></div>';
 }

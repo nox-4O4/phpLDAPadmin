@@ -13,7 +13,7 @@ require './common.php';
 
 $attrs = $app['server']->getRootDSE();
 
-printf('<h3 class="title">%s%s</h3>',_('Server info for: '),$app['server']->getName());
+printf('<h3 class="title">%s%s</h3>',_('Server info for: '), htmlspecialchars($app['server']->getName()));
 printf('<h3 class="subtitle">%s</h3>',_('Server reports the following information about itself'));
 
 if (! count($attrs)) {
@@ -32,12 +32,12 @@ foreach ($attrs as $key => $values) {
 	$sattr = $app['server']->getSchemaAttribute($key);
 
 	if ($sattr && $_SESSION[APPCONFIG]->isCommandAvailable('script','schema') && $_SESSION[APPCONFIG]->getValue('appearance','show_schema_link')) {
-		$href = sprintf('cmd.php?cmd=schema&amp;server_id=%s&amp;view=attributes&amp;viewvalue=%s',$app['server']->getIndex(),$sattr->getName());
+		$href = sprintf('cmd.php?cmd=schema&amp;server_id=%s&amp;view=attributes&amp;viewvalue=%s',$app['server']->getIndex(), htmlspecialchars($sattr->getName()));
 		printf('<a href="%s" title="%s: %s" >%s</a>',
-			$href,_('Click to view the schema definition for attribute type'),$sattr->getName(false),$sattr->getName(false));
+			$href,_('Click to view the schema definition for attribute type'), htmlspecialchars($sattr->getName(false)), htmlspecialchars($sattr->getName(false)));
 
 	} else
-		echo $key;
+		echo htmlspecialchars($key);
 
 	echo '</td></tr>';
 
@@ -51,7 +51,7 @@ foreach ($attrs as $key => $values) {
 
 			if (preg_match('/^[0-9]+\.[0-9]+/',$value)) {
 				printf('<td rowspan="2" style="width: 5%%; vertical-align: top"><img src="%s/rfc.png" title="%s" alt="%s"/></td>',
-					IMGDIR,$value,htmlspecialchars($value));
+					IMGDIR, htmlspecialchars($value),htmlspecialchars($value));
 
 				if ($oidtext = support_oid_to_text($value))
 					if (isset($oidtext['ref']))
@@ -61,10 +61,10 @@ foreach ($attrs as $key => $values) {
 
 				else
 					if (strlen($value) > 0)
-						printf('<td><small>%s</small></td>',$value);
+						printf('<td><small>%s</small></td>', htmlspecialchars($value));
 
 			} else {
-				printf('<td rowspan="2" colspan="2">%s</td>',$value);
+				printf('<td rowspan="2" colspan="2">%s</td>', htmlspecialchars($value));
 			}
 
 			print '</tr>';
@@ -79,7 +79,7 @@ foreach ($attrs as $key => $values) {
 		}
 
 	else
-		printf('<tr><td colspan="2">%s&nbsp;</td></tr>',$values);
+		printf('<tr><td colspan="2">%s&nbsp;</td></tr>', htmlspecialchars($values));
 
 
 	echo '</table>';

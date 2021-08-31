@@ -63,7 +63,7 @@ if (! strcasecmp($request['attr'],'objectclass') || get_request('meth','REQUEST'
 
 	if ($request['count']) {
 		printf('<td class="top">%s <b>%s</b> %s <b>%s</b>:</td>',
-			_('Current list of'),$request['count'],_('values for attribute'),$request['attribute']->getFriendlyName());
+			_('Current list of'),$request['count'],_('values for attribute'),htmlspecialchars($request['attribute']->getFriendlyName()));
 
 		echo '<td>';
 
@@ -81,7 +81,7 @@ if (! strcasecmp($request['attr'],'objectclass') || get_request('meth','REQUEST'
 
 	} else {
 		printf('<td>%s <b>%s</b>.</td>',
-			_('No current value for attribute'),$request['attribute']->getFriendlyName());
+			_('No current value for attribute'), htmlspecialchars($request['attribute']->getFriendlyName()));
 		echo '<td><br /><br /></td>';
 	}
 
@@ -105,9 +105,9 @@ if (! strcasecmp($request['attr'],'objectclass') || get_request('meth','REQUEST'
 		foreach ($socs as $name => $oclass) {
 			# Exclude any structural ones, that are not in the heirachy, as they'll only generate an LDAP_OBJECT_CLASS_VIOLATION
 			if (($oclass->getType() == 'structural') && ! $oclass->isRelated($request['attribute']->getValues()))
-				continue; 
+				continue;
 
-			printf('<option value="%s">%s</option>',$oclass->getName(false),$oclass->getName(false));
+			printf('<option value="%s">%s</option>', htmlspecialchars($oclass->getName(false)), htmlspecialchars($oclass->getName(false)));
 		}
 		echo '</select>';
 		echo '</td></tr><tr><td>';
@@ -136,10 +136,10 @@ if (! strcasecmp($request['attr'],'objectclass') || get_request('meth','REQUEST'
 		$sattr = $app['server']->getSchemaAttribute($request['attr']);
 
 		if ($sattr->getDescription())
-			printf('<small><b>%s:</b> %s</small><br />',_('Description'),$sattr->getDescription());
+			printf('<small><b>%s:</b> %s</small><br />',_('Description'), htmlspecialchars($sattr->getDescription()));
 
 		if ($sattr->getType())
-			printf('<small><b>%s:</b> %s</small><br />',_('Syntax'),$sattr->getType());
+			printf('<small><b>%s:</b> %s</small><br />',_('Syntax'), htmlspecialchars($sattr->getType()));
 
 		if ($sattr->getMaxLength())
 			printf('<small><b>%s:</b> %s %s</small><br />',

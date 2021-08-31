@@ -56,7 +56,7 @@ if ((! $app['scriptOK'] && preg_match('/^\/[cron|tools]/',$app['script_running']
 
 if (! $app['scriptOK']) {
 	if (isset($_REQUEST['server_id']))
-		header(sprintf('Location: index.php?server_id=%s',$_REQUEST['server_id']));
+		header(sprintf('Location: index.php?server_id=%s',(int)$_REQUEST['server_id']));
 	else
 		header('Location: index.php');
 	die();

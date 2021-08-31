@@ -111,13 +111,13 @@ class AJAXTree extends HTMLTree {
 		}
 
 		printf('<a href="%s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');" title="%s" >',$href,$parms['edit'],_('Retrieving DN'),htmlspecialchars($entry->getDN()));
-		printf('<span class="dnicon"><img id="jt%sfolder" src="%s/%s" alt="->" class="imgs" style="border: 0px; vertical-align:text-top;" /></span>',$node_id,IMGDIR,$entry->getIcon($server));
+		printf('<span class="dnicon"><img id="jt%sfolder" src="%s/%s" alt="->" class="imgs" style="border: 0px; vertical-align:text-top;" /></span>',$node_id,IMGDIR, htmlspecialchars($entry->getIcon($server)));
 		echo '</a>';
 
 		echo '&nbsp;';
 		printf('<a href="%s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');" title="%s" class="phplm">',$href,$parms['edit'],_('Retrieving DN'),htmlspecialchars($entry->getDN()));
 		echo $this->get_formatted_dn($entry,$level-1);
-		echo ($child_count ? (sprintf(' (%s%s)',$child_count,($entry->isSizeLimited() ? '+' : ''))) : '');
+		echo ($child_count ? (sprintf(' (%s%s)', htmlspecialchars($child_count),($entry->isSizeLimited() ? '+' : ''))) : '');
 		echo '</a>';
 
 		echo '</div>';
@@ -212,8 +212,8 @@ class AJAXTree extends HTMLTree {
 			debug_log('Entered (%%)',33,0,__FILE__,__LINE__,__METHOD__,$fargs);
 
 		parent::draw_javascript();
-		printf('<script type="text/javascript" src="%slayersmenu-browser_detection.js"></script>',JSDIR);
-		printf('<script type="text/javascript" src="%sajax_tree.js"></script>',JSDIR);
+		printf('<script type="text/javascript" src="%slayersmenu-browser_detection.js"></script>', htmlspecialchars(JSDIR));
+		printf('<script type="text/javascript" src="%sajax_tree.js"></script>', htmlspecialchars(JSDIR));
 	}
 
 	/**
@@ -267,8 +267,8 @@ class AJAXTree extends HTMLTree {
 		$href = sprintf('cmd=template_engine&server_id=%s&container=%s',$this->getServerID(),$entry->getDNEncode());
 
 		$output .= $this->get_indentation($level);
-		$output .= sprintf('<img src="%s" alt="--" class="imgs" style="border: 0px; vertical-align:text-top;" />',$img);
-		$output .= sprintf('<a href="%s" title="%s">',htmlspecialchars($href),$entry->getDN());
+		$output .= sprintf('<img src="%s" alt="--" class="imgs" style="border: 0px; vertical-align:text-top;" />', htmlspecialchars($img));
+		$output .= sprintf('<a href="%s" title="%s">',htmlspecialchars($href), htmlspecialchars($entry->getDN()));
 		$output .= sprintf('<img src="%s/create.png" alt="->" class="imgs" style="border: 0px; vertical-align:text-top;" />',IMGDIR);
 		$output .= '</a>';
 		$output .= '&nbsp;';

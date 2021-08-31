@@ -26,7 +26,7 @@ $request['template'] = $request['page']->getTemplate();
 
 # Render the form
 if (get_request('meth','REQUEST') != 'ajax') {
-	$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Add new attribute'),get_rdn($request['dn'])));
+	$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Add new attribute'),htmlspecialchars(get_rdn($request['dn']))));
 	$request['page']->drawSubTitle();
 
 	echo '<div style="text-align: center;">';
@@ -69,7 +69,7 @@ if (get_request('meth','REQUEST') != 'ajax') {
 					else
 						$attr_display = $attribute->getName(false);
 
-					printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()),$attr_display);
+					printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()), htmlspecialchars($attr_display));
 				}
 
 				echo '</select>';
@@ -112,7 +112,7 @@ if (get_request('meth','REQUEST') != 'ajax') {
 					else
 						$attr_display = $attribute->getName(false);
 
-					printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()),$attr_display);
+					printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()), htmlspecialchars($attr_display));
 				}
 
 				echo '</select>';
@@ -173,7 +173,7 @@ if (get_request('meth','REQUEST') != 'ajax') {
 
 	printf('<option value="%s">%s</option>','','');
 	foreach ($request['template']->getAvailAttrs() as $attribute)
-		printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()),$attribute->getFriendlyName());
+		printf('<option value="%s">%s</option>',htmlspecialchars($attribute->getName()), htmlspecialchars($attribute->getFriendlyName()));
 
 	echo '</select>';
 

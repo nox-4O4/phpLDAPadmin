@@ -22,10 +22,10 @@ $results = $app['server']->query($query,null);
 if (! isset($attrs['monitorcontext']) || ! count($results))
 	system_message(array(
 		'title'=>_('Monitoring context does not exist'),
-		'body'=>sprintf('%s: <b>%s</b>',_('Could not obtain the monitor context for this server'),$app['server']->getName()),
+		'body'=>sprintf('%s: <b>%s</b>',_('Could not obtain the monitor context for this server'), htmlspecialchars($app['server']->getName())),
 		'type'=>'warn'),'index.php');
 
-printf('<h3 class="title">%s%s</h3>',_('Monitor info for: '),$app['server']->getName());
+printf('<h3 class="title">%s%s</h3>',_('Monitor info for: '), htmlspecialchars($app['server']->getName()));
 printf('<h3 class="subtitle">%s</h3>',_('Server reports the following information about itself'));
 
 echo '<table class="result" border="0">';
@@ -35,7 +35,7 @@ printf('<tr class="list_item"><td class="heading" rowspan="2">%s</td></tr>',_('L
 printf('<tr class="list_item"><td class="value">');
 
 echo '<table class="result" border="0">';
-printf('<tr><td>%s</td></tr>',$results[$attrs['monitorcontext'][0]]['monitoredinfo'][0]);
+printf('<tr><td>%s</td></tr>', htmlspecialchars($results[$attrs['monitorcontext'][0]]['monitoredinfo'][0]));
 echo '</table>';
 
 echo '</td></tr>';
@@ -53,7 +53,7 @@ foreach (array(
 		$description = '';
 	}
 
-	printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>',$description,$dn);
+	printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>', htmlspecialchars($description), htmlspecialchars($dn));
 	echo '<tr class="list_item"><td class="value">';
 	echo '<table class="result"><tr><td>';
 	echo '<table class="result_table" border="0" width="100%">';
@@ -67,14 +67,14 @@ foreach (array(
 	printf('<td style="width: 10%%;">%s</td><td style="width: 20%%;">%s</td>',_('Type'),'namingContext');
 
 	foreach ($attrs as $attr)
-		printf('<td style="width: 20%%;">%s</td>',$attr);
+		printf('<td style="width: 20%%;">%s</td>', htmlspecialchars($attr));
 
 	echo '</tr>';
 
 	$counter = 0;
 	foreach ($results[$dn]['monitoredinfo'] as $index => $backend) {
 		printf('<tr class="%s">',$counter++%2==0?'even':'odd');
-		printf('<td>%s</td>',$backend);
+		printf('<td>%s</td>', htmlspecialchars($backend));
 
 		$key = sprintf($child,$index,$dn);
 
@@ -85,10 +85,10 @@ foreach (array(
 			foreach ($seealso as $db)
 				if (isset($results[$db]['namingcontexts']))
 					printf('<acronym title="%s">%s</acronym><br/>',
-						isset($results[$db]['labeleduri']) ? implode(' ',$results[$db]['labeleduri']) : _('Internal'),
-						implode(' ',$results[$db]['namingcontexts']));
+						isset($results[$db]['labeleduri']) ? htmlspecialchars(implode(' ', $results[$db]['labeleduri'])) : _('Internal'),
+						   htmlspecialchars(implode(' ',$results[$db]['namingcontexts'])));
 				else
-					printf('%s ',implode(' ',$results[$db]['monitoredinfo']));
+					printf('%s ', htmlspecialchars(implode(' ',$results[$db]['monitoredinfo'])));
 
 		} else {
 			echo '&nbsp;';
@@ -108,11 +108,11 @@ foreach (array(
 						$oidtotext = support_oid_to_text($control);
 
 						printf('<acronym title="%s">%s</acronym><br/>',
-							$control,$oidtotext['title']);
+						       htmlspecialchars($control), htmlspecialchars($oidtotext['title']));
 					}
 
 				else
-					printf('%s ',implode('<br/>',$sc));
+					printf('%s ', htmlspecialchars(implode('<br/>',$sc)));
 
 			} else {
 				echo '&nbsp;';
@@ -129,21 +129,21 @@ foreach (array(
 }
 
 # cn=Connections,cn=Monitor
-printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>',$results['cn=Connections,cn=Monitor']['description'][0],_('LDAP Connections'));
+printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>', htmlspecialchars($results['cn=Connections,cn=Monitor']['description'][0]),_('LDAP Connections'));
 printf('<tr class="list_item"><td class="value">');
 echo '<table class="result"><tr><td>';
 echo '<table class="result_table" border="0" width="100%">';
 
 printf('<tr class="highlight"><td class="20%%">%s</td><td class="value" style="width: 80%%;">%s</td></tr>',
-	_('Total Connections'),$results['cn=Total,cn=Connections,cn=Monitor']['monitorcounter'][0]);
+	_('Total Connections'), htmlspecialchars($results['cn=Total,cn=Connections,cn=Monitor']['monitorcounter'][0]));
 printf('<tr class="highlight"><td class="20%%">%s</td><td class="value" style="width: 80%%;">%s</td></tr>',
-	_('Current Connections'),$results['cn=Current,cn=Connections,cn=Monitor']['monitorcounter'][0]);
+	_('Current Connections'), htmlspecialchars($results['cn=Current,cn=Connections,cn=Monitor']['monitorcounter'][0]));
 
 # Look for some connections
 foreach ($results as $key => $value) {
 	if (preg_match('/^cn=Connection.*,cn=Connections,cn=Monitor$/',$key)) {
 		echo '<tr class="highlight">';
-		printf('<td>%s</td>',$results[$key]['cn'][0]);
+		printf('<td>%s</td>', htmlspecialchars($results[$key]['cn'][0]));
 
 		echo '<td class="value">';
 		echo '<table class="result_table" border="0" width="100%">';
@@ -172,7 +172,7 @@ foreach ($results as $key => $value) {
 			printf('<tr class="%s">',$counter++%2==0?'even':'odd');
 
 			printf('<td class="title" style="width: 35%%;">%s</td><td style="width: 65%%;">%s</td>',
-				$metric,isset($results[$key][$metric]) ? $results[$key][$metric][0] : '&nbsp;');
+				$metric,isset($results[$key][$metric]) ? htmlspecialchars($results[$key][$metric][0]) : '&nbsp;');
 			echo '</tr>';
 		}
 
@@ -201,26 +201,26 @@ foreach (array(
 	$description = implode(' ',$results[$dn]['description']);
 	$description = preg_replace('/"/','\'',$description);
 
-	printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>',$description,$dn);
+	printf('<tr class="list_item"><td class="heading" rowspan="2"><acronym title="%s">%s</acronym></td></tr>', htmlspecialchars($description),$dn);
 	echo '<tr class="list_item"><td class="value">';
 	echo '<table class="result"><tr><td>';
 	echo '<table class="result_table" border="0" width="100%">';
 
 	if (isset($results[$dn]['monitoropinitiated']))
 		printf('<tr class="highlight"><td style="width: 20%%;">%s</td><td class="value" style="width: 80%%;">%s</td></tr>',
-			'monitorOpInitiated',$results[$dn]['monitoropinitiated'][0]);
+			'monitorOpInitiated', htmlspecialchars($results[$dn]['monitoropinitiated'][0]));
 	if (isset($results[$dn]['monitoropcompleted']))
 		printf('<tr class="highlight"><td style="width: 20%%;">%s</td><td class="value" style="width: 80%%;">%s</td></tr>',
-			'monitorOpCompleted',$results[$dn]['monitoropcompleted'][0]);
+			'monitorOpCompleted', htmlspecialchars($results[$dn]['monitoropcompleted'][0]));
 	if (isset($results[$dn]['monitoredinfo']))
 		printf('<tr class="highlight"><td style="width: 20%%;">%s</td><td class="value" style="width: 80%%;">%s</td></tr>',
-			'monitoredInfo',$results[$dn]['monitoredinfo'][0]);
+			'monitoredInfo', htmlspecialchars($results[$dn]['monitoredinfo'][0]));
 
 	# Look for some connecitons
 	foreach ($results as $key => $value) {
 		if (preg_match('/^.*,'.$dn.'$/',$key)) {
 			echo '<tr class="highlight">';
-			printf('<td style="width: 20%%;">%s</td>',$results[$key]['cn'][0]);
+			printf('<td style="width: 20%%;">%s</td>', htmlspecialchars($results[$key]['cn'][0]));
 
 			echo '<td class="value" style="width: 80%;">';
 			echo '<table class="result_table" border="0" width="100%">';
@@ -239,7 +239,7 @@ foreach (array(
 					printf('<tr class="%s">',$counter++%2==0?'even':'odd');
 
 					printf('<td class="title" style="width: 35%%;">%s</td><td style="width: 65%%;">%s</td>',
-						$metric,$results[$key][$metric][0]);
+						$metric, htmlspecialchars($results[$key][$metric][0]));
 
 					echo '</tr>';
 				}

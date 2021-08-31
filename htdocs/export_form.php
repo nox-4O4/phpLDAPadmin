@@ -36,8 +36,8 @@ $available_scopes = array(
 $request['page'] = new PageRender($app['server']->getIndex(),get_request('template','REQUEST',false,'none'));
 $request['page']->drawTitle(sprintf('<b>%s</b>',_('Export')));
 
-printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',JSDIR);
-printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>',JSDIR);
+printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>', htmlspecialchars(JSDIR));
+printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>', htmlspecialchars(JSDIR));
 
 echo '<br />';
 echo '<form id="export_form" action="cmd.php" method="post">';
@@ -53,7 +53,7 @@ echo '<fieldset>';
 printf('<legend>%s</legend>',_('Export'));
 
 echo '<table>';
-printf('<tr><td>%s</td><td>%s</td></tr>',_('Server'),$app['server']->getName());
+printf('<tr><td>%s</td><td>%s</td></tr>',_('Server'), htmlspecialchars($app['server']->getName()));
 
 echo '<tr>';
 printf('<td style="white-space:nowrap">%s</td>',_('Base DN'));

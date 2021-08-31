@@ -26,7 +26,7 @@ abstract class Visitor {
 			debug_log('Entered (%%)',129,0,__FILE__,__LINE__,__METHOD__,$fargs);
 
 		if (! in_array($method,array('get','visit','draw')))
-			debug_dump_backtrace(sprintf('Incorrect use of method loading [%s]',$method),1);
+			debug_dump_backtrace(sprintf('Incorrect use of method loading [%s]', htmlspecialchars($method)),1);
 
 		$methods = array();
 
@@ -41,7 +41,7 @@ abstract class Visitor {
 
 		while ($class && ! method_exists($this,$call)) {
 			if (defined('DEBUGTMP') && DEBUGTMP)
-				printf('<font size=-2><i>Class (%s): Method doesnt exist (%s,%s)</i></font><br />',$class,get_class($this),$call);
+				printf('<font size=-2><i>Class (%s): Method doesnt exist (%s,%s)</i></font><br />', htmlspecialchars($class),get_class($this), htmlspecialchars($call));
 
 			$class = get_parent_class($class);
 			$call = "$method$fnct$class";
@@ -49,10 +49,10 @@ abstract class Visitor {
 		}
 
 		if (defined('DEBUGTMP') && DEBUGTMP)
-			printf('<font size=-2><i>Calling Methods: %s</i></font><br />',implode('|',$methods));
+			printf('<font size=-2><i>Calling Methods: %s</i></font><br />', htmlspecialchars(implode('|',$methods)));
 
 		if (defined('DEBUGTMP') && DEBUGTMP && method_exists($this,$call))
-			printf('<font size=-2>Method Exists: %s::%s (%s)</font><br />',get_class($this),$call,$args);
+			printf('<font size=-2>Method Exists: %s::%s (%s)</font><br />',get_class($this), htmlspecialchars($call), htmlspecialchars($args));
 
 		if (method_exists($this,$call)) {
 			$r = call_user_func_array(array($this,$call),$args);
@@ -66,7 +66,7 @@ abstract class Visitor {
 			debug_log('Doesnt exist param (%s,%s)',1,0,__FILE__,__LINE__,__METHOD__,$method,$fnct);
 		}
 
-		printf('<font size=-2><i>NO Methods: %s</i></font><br />',implode('|',$methods));
+		printf('<font size=-2><i>NO Methods: %s</i></font><br />', htmlspecialchars(implode('|',$methods)));
 	}
 
 	/**

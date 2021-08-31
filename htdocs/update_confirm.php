@@ -27,7 +27,7 @@ $request['page']->setDN($request['dn']);
 $request['page']->accept();
 $request['template'] = $request['page']->getTemplate();
 
-$request['page']->drawTitle(get_rdn($request['template']->getDN()));
+$request['page']->drawTitle(htmlspecialchars(get_rdn($request['template']->getDN())));
 $request['page']->drawSubTitle();
 
 # Confirm the updates
@@ -63,7 +63,7 @@ if (count($request['template']->getLDAPmodify(true))) {
 		$counter++;
 
 		printf('<tr class="%s">',$counter%2 ? 'even' : 'odd');
-		printf('<td><b>%s</b></td>',$attribute->getFriendlyName());
+		printf('<td><b>%s</b></td>', htmlspecialchars($attribute->getFriendlyName()));
 
 		# Show OLD Values
 		echo '<td><span style="white-space: nowrap;">';
@@ -129,9 +129,9 @@ if (count($request['template']->getLDAPmodify(true))) {
 				foreach ($request['template']->getForceDeleteAttrs() as $ad_name) {
 					# Only if it is not a must attr by this objectclass now staying
 					if (! in_array($ad_name->getName(),getMustAttrs($attribute->getOldValues())))
-						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = false;",$ad_name->getName());
+						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = false;", htmlspecialchars($ad_name->getName(),ENT_QUOTES));
 
-					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = true;",$ad_name->getName());
+					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = true;", htmlspecialchars($ad_name->getName(),ENT_QUOTES));
 					$input_onclick .= "\n";
 				}
 
@@ -139,8 +139,8 @@ if (count($request['template']->getLDAPmodify(true))) {
 
 				# Otherwise the attributes must be deleted.
 				foreach ($request['template']->getForceDeleteAttrs() as $ad_name) {
-					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = false;",$ad_name->getName());
-					$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = true;",$ad_name->getName());
+					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = false;", htmlspecialchars($ad_name->getName(),ENT_QUOTES));
+					$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = true;", htmlspecialchars($ad_name->getName(),ENT_QUOTES));
 					$input_onclick .= "\n";
 				}
 
@@ -157,9 +157,9 @@ if (count($request['template']->getLDAPmodify(true))) {
 			foreach ($request['template']->getLDAPmodify(true) as $skipattr) {
 				if (! $skipattr->getOldValues()) {
 					if (! in_array($skipattr->getName(),$mustattrs))
-						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = true;",$skipattr->getName());
+						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = true;", htmlspecialchars($skipattr->getName(),ENT_QUOTES));
 
-					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = true;",$skipattr->getName());
+					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = true;", htmlspecialchars($skipattr->getName(),ENT_QUOTES));
 					$input_onclick .= "\n";
 				}
 			}
@@ -169,9 +169,9 @@ if (count($request['template']->getLDAPmodify(true))) {
 			foreach ($request['template']->getLDAPmodify(true) as $skipattr) {
 				if (! $skipattr->getOldValues()) {
 					if (! in_array($skipattr->getName(),$mustattrs))
-						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = false;",$skipattr->getName());
+						$input_onclick .= sprintf("document.getElementById('skip_array_%s').disabled = false;", htmlspecialchars($skipattr->getName(),ENT_QUOTES));
 
-					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = false;",$skipattr->getName());
+					$input_onclick .= sprintf("document.getElementById('skip_array_%s').checked = false;", htmlspecialchars($skipattr->getName(),ENT_QUOTES));
 					$input_onclick .= "\n";
 				}
 			}
@@ -204,7 +204,7 @@ if (count($request['template']->getLDAPmodify(true))) {
 	if (count($request['template']->getForceDeleteAttrs()) > 0) {
 		echo '<table class="result_table" style="margin-left: auto; margin-right: auto;"><tr>';
 		printf('<td class="heading">%s:</td>',_('The deletion of objectClass(es)'));
-		printf('<td class="value"><b>%s</b></td>',implode('</b>, <b>',$request['template']->getAttribute('objectclass')->getRemovedValues()));
+		printf('<td class="value"><b>%s</b></td>',implode('</b>, <b>',array_map('htmlspecialchars', $request['template']->getAttribute('objectclass')->getRemovedValues())));
 		echo '</tr><tr>';
 		printf('<td class="heading">%s:</td>',_('will delete the attribute(s)'));
 		echo '<td class="value"><b>';

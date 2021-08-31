@@ -214,14 +214,14 @@ class Config {
 			'default'=>'AJAXTree');
 
 		/** Tree display
-		 * An array of format strings used to display enties in the 
-		 * tree viewer (left-hand side). The first format string that 
-		 * is completely defined (i.e., does not reference attributes 
-		 * that are not defined the object). If there is no format 
-		 * string that is completely defined, the last one is used. 
-		 * 
-		 * You can use special tokens to draw the entries as you wish. 
-		 * You can even mix in HTML to format the string. 
+		 * An array of format strings used to display enties in the
+		 * tree viewer (left-hand side). The first format string that
+		 * is completely defined (i.e., does not reference attributes
+		 * that are not defined the object). If there is no format
+		 * string that is completely defined, the last one is used.
+		 *
+		 * You can use special tokens to draw the entries as you wish.
+		 * You can even mix in HTML to format the string.
 		 * Here are all the tokens you can use:
 		 *	%rdn - draw the RDN of the entry (ie, "cn=Dave")
 		 *	%dn - draw the DN of the entry (ie, "cn=Dave,ou=People,dc=example,dc=com"
@@ -500,8 +500,8 @@ class Config {
 
 		$this->default->session['http_realm'] = array(
 			'desc'=>'HTTP Authentication Realm',
-			'default'=>sprintf('%s %s',app_name(),_('login')));
 
+			'default'=>sprintf('%s %s',app_name(),_('login')));
 		$this->default->session['memorylimit'] = array(
 			'desc'=>'Set the PHP memorylimit warning threshold.',
 			'default'=>24);
@@ -622,13 +622,13 @@ class Config {
 		if (! isset($config[$key]))
 			if ($fatal)
 				error(sprintf('A call was made in [%s] to getValue requesting [%s] that isnt predefined.',
-					basename($_SERVER['PHP_SELF']),$key),'error',null,true);
+					basename($_SERVER['PHP_SELF']), htmlspecialchars($key)),'error',null,true);
 			else
 				return '';
 
 		if (! isset($config[$key][$index]))
 			if ($fatal)
-				error(sprintf('Requesting an index [%s] in key [%s] that isnt predefined.',$index,$key),'error',null,true);
+				error(sprintf('Requesting an index [%s] in key [%s] that isnt predefined.', htmlspecialchars($index), htmlspecialchars($key)),'error',null,true);
 			else
 				return '';
 
@@ -662,23 +662,23 @@ class Config {
 				if (isset($this->default->$masterkey)) {
 
 					if (! is_array($masterdetails))
-						error(sprintf('Error in configuration file, [%s] should be an ARRAY.',$masterdetails),'error',null,true);
+						error(sprintf('Error in configuration file, [%s] should be an ARRAY.', htmlspecialchars($masterdetails)),'error',null,true);
 
 					foreach ($masterdetails as $key => $value) {
 						# Test that the key is correct.
 						if (! in_array($key,array_keys($this->default->$masterkey)))
-							error(sprintf('Error in configuration file, [%s] has not been defined as a configurable variable.',$key),'error',null,true);
+							error(sprintf('Error in configuration file, [%s] has not been defined as a configurable variable.', htmlspecialchars($key)),'error',null,true);
 
 						# Test if its should be an array or not.
 						if (is_array($this->default->{$masterkey}[$key]['default']) && ! is_array($value))
-							error(sprintf('Error in configuration file, %s[\'%s\'] SHOULD be an array of values.',$masterkey,$key),'error',null,true);
+							error(sprintf('Error in configuration file, %s[\'%s\'] SHOULD be an array of values.', htmlspecialchars($masterkey), htmlspecialchars($key)),'error',null,true);
 
 						if (! is_array($this->default->{$masterkey}[$key]['default']) && is_array($value))
-							error(sprintf('Error in configuration file, %s[\'%s\'] should NOT be an array of values.',$masterkey,$key),'error',null,true);
+							error(sprintf('Error in configuration file, %s[\'%s\'] should NOT be an array of values.', htmlspecialchars($masterkey), htmlspecialchars($key)),'error',null,true);
 					}
 
 				} else {
-					error(sprintf('Error in configuration file, [%s] has not been defined as a MASTER configurable variable.',$masterkey),'error',null,true);
+					error(sprintf('Error in configuration file, [%s] has not been defined as a MASTER configurable variable.', htmlspecialchars($masterkey)),'error',null,true);
 				}
 			}
 		}
@@ -799,9 +799,9 @@ class Config {
 
 		if ($this->haveFriendlyName($attr))
 			return sprintf('<acronym title="%s %s">%s</acronym>',
-				_('Alias for'),$attr->getName(false),$this->getFriendlyName($attr));
+				_('Alias for'), htmlspecialchars($attr->getName(false)), htmlspecialchars($this->getFriendlyName($attr)));
 		else
-			return $attr->getName(false);
+			return htmlspecialchars($attr->getName(false));
 	}
 
 	public function setServers($servers) {

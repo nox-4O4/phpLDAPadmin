@@ -12,7 +12,7 @@
 
 require './common.php';
 
-printf('<h3 class="title">%s %s</h3>',_('Authenticate to server'),$app['server']->getName());
+printf('<h3 class="title">%s %s</h3>',_('Authenticate to server'), htmlspecialchars($app['server']->getName()));
 echo '<br />';
 
 # Check for a secure connection
@@ -113,6 +113,6 @@ if ($app['server']->getAuthType() == 'http') {
 	echo '<script type="text/javascript">document.getElementById("login").focus()</script>';
 
 	if ($app['server']->isAnonBindAllowed())
-		printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>',JSDIR);
+		printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>', htmlspecialchars(JSDIR));
 }
 ?>

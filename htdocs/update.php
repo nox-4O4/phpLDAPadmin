@@ -67,7 +67,7 @@ if ($result) {
 		$app['server']->getIndex(),$request['template']->getDNEncode());
 
 	foreach ($request['template']->getLDAPmodify() as $attr => $junk)
-		$redirect_url .= sprintf('&modified_attrs[]=%s',$attr);
+		$redirect_url .= sprintf('&modified_attrs[]=%s', htmlspecialchars($attr));
 
 	if (get_request('meth','REQUEST') == 'ajax')
 		$redirect_url .= '&meth=ajax';

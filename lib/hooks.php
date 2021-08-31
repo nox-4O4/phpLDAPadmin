@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  *
- * @author Benjamin Drieu <benjamin.drieu@fr.alcove.com> and Alc√?ve
+ * @author Benjamin Drieu <benjamin.drieu@fr.alcove.com> and AlcÔøΩ?ve
  * @package phpLDAPadmin
  */
 
@@ -124,7 +124,7 @@ function add_hook($hook_name,$hook_function,$priority=0,$rollback_function=null)
 	if (! function_exists($hook_function)) {
 		system_message(array(
 			'title'=>_('Hook function does not exist'),
-			'body'=>sprintf('Hook name: %s<br/>Hook function: %s',$hook_name,$hook_function),
+			'body'=>sprintf('Hook name: %s<br/>Hook function: %s', htmlspecialchars($hook_name), htmlspecialchars($hook_function)),
 			'type'=>'warn'));
 
 		return;

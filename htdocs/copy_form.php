@@ -24,10 +24,10 @@ $request['page']->setDN($request['dn']);
 $request['page']->accept();
 
 # Render the form
-$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Copy'),get_rdn($request['dn'])));
+$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Copy'), htmlspecialchars(get_rdn($request['dn']))));
 $request['page']->drawSubTitle();
 
-printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',JSDIR);
+printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>', htmlspecialchars(JSDIR));
 echo '<div style="text-align: center;">';
 printf('%s <b>%s</b> %s:<br /><br />',_('Copy'),get_rdn($request['dn']),_('to a new object'));
 echo '</div>';
@@ -99,5 +99,5 @@ if ($_SESSION[APPCONFIG]->getValue('appearance','show_hints'))
 
 # Draw the javascrpt to enable/disable the filter field if this may be a recursive copy
 if (count($request['children']) > 0)
-	printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>',JSDIR);
+	printf('<script type="text/javascript" src="%sform_field_toggle_enable.js"></script>', htmlspecialchars(JSDIR));
 ?>

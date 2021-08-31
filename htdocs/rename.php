@@ -26,7 +26,7 @@ if (! $app['server']->isBranchRenameEnabled()) {
 		error(_('You cannot rename an entry which has children entries (eg, the rename operation is not allowed on non-leaf entries)'),'error','index.php');
 }
 
-$request['dnDST'] = sprintf('%s,%s',$request['rdnDST'],$request['container']);
+$request['dnDST'] = sprintf('%s,%s',$request['rdnDST'], htmlspecialchars($request['container']));
 
 if ($request['dnDST'] == $request['dnSRC'])
 	error(_('You did not change the RDN'),'error','index.php');

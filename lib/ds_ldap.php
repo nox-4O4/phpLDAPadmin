@@ -214,8 +214,8 @@ class ldap extends DS {
 			$this->noconnect = true;
 
 			system_message(array(
-				'title'=>sprintf('%s %s',_('Unable to connect to LDAP server'),$this->getName()),
-				'body'=>sprintf('<b>%s</b>: %s (%s) for <b>%s</b>',_('Error'),$this->getErrorMessage($method),$this->getErrorNum($method),$method),
+				'title'=>sprintf('%s %s',_('Unable to connect to LDAP server'), htmlspecialchars($this->getName())),
+				'body'=>sprintf('<b>%s</b>: %s (%s) for <b>%s</b>',_('Error'), htmlspecialchars($this->getErrorMessage($method)), htmlspecialchars($this->getErrorNum($method)), htmlspecialchars($method)),
 				'type'=>'error'));
 
 			$CACHE[$this->index][$method] = null;
@@ -341,7 +341,7 @@ class ldap extends DS {
 		if ($query['scope'] == 'base' && ! isset($query['baseok']))
 			system_message(array(
 				'title'=>sprintf('Dont call %s',__METHOD__),
-				'body'=>sprintf('Use getDNAttrValues for base queries [%s]',$query['base']),
+				'body'=>sprintf('Use getDNAttrValues for base queries [%s]', htmlspecialchars($query['base'])),
 				'type'=>'info'));
 
 		if (is_array($query['base'])) {
@@ -572,7 +572,7 @@ class ldap extends DS {
 
 		if (! $this->getValue('server','tls') || (function_exists('ldap_start_tls') && ! @ldap_start_tls($resource))) {
 			system_message(array(
-				'title'=>sprintf('%s (%s)',_('Could not start TLS.'),$this->getName()),
+				'title'=>sprintf('%s (%s)',_('Could not start TLS.'), htmlspecialchars($this->getName())),
 				'body'=>sprintf('<b>%s</b>: %s',_('Error'),_('Could not start TLS. Please check your LDAP server configuration.')),
 				'type'=>'error'));
 
@@ -719,7 +719,7 @@ class ldap extends DS {
 
 		if (! (isset($rootdse['supportedcontrol']) && in_array('2.16.840.1.113730.3.4.18',$rootdse['supportedcontrol']))) {
 			system_message(array(
-				'title'=>sprintf('%s %s',_('Unable to start proxy connection'),$this->getName()),
+				'title'=>sprintf('%s %s',_('Unable to start proxy connection'), htmlspecialchars($this->getName())),
 				'body'=>sprintf('<b>%s</b>: %s',_('Error'),_('Your LDAP server doesnt seem to support this control')),
 				'type'=>'error'));
 
@@ -733,8 +733,8 @@ class ldap extends DS {
 		foreach ($this->getValue('proxy','attr') as $attr => $var) {
 			if (! isset($_SERVER[$var])) {
 				system_message(array(
-					'title'=>sprintf('%s %s',_('Unable to start proxy connection'),$this->getName()),
-					'body'=>sprintf('<b>%s</b>: %s (%s)',_('Error'),_('Attribute doesnt exist'),$var),
+					'title'=>sprintf('%s %s',_('Unable to start proxy connection'), htmlspecialchars($this->getName())),
+					'body'=>sprintf('<b>%s</b>: %s (%s)',_('Error'),_('Attribute doesnt exist'), htmlspecialchars($var)),
 					'type'=>'error'));
 
 				$missing = true;
@@ -767,7 +767,7 @@ class ldap extends DS {
 
 			if (count($search) != 1) {
 				system_message(array(
-					'title'=>sprintf('%s %s',_('Unable to start proxy connection'),$this->getName()),
+					'title'=>sprintf('%s %s',_('Unable to start proxy connection'), htmlspecialchars($this->getName())),
 					'body'=>sprintf('<b>%s</b>: %s (%s)',_('Error'),_('Search for DN returned the incorrect number of results'),count($search)),
 					'type'=>'error'));
 
@@ -785,8 +785,8 @@ class ldap extends DS {
 
 		if (! ldap_set_option($resource,LDAP_OPT_SERVER_CONTROLS,array($ctrl))) {
 			system_message(array(
-				'title'=>sprintf('%s %s',_('Unable to start proxy connection'),$this->getName()),
-				'body'=>sprintf('<b>%s</b>: %s (%s) for <b>%s</b>',_('Error'),$this->getErrorMessage($method),$this->getErrorNum($method),$method),
+				'title'=>sprintf('%s %s',_('Unable to start proxy connection'), htmlspecialchars($this->getName())),
+				'body'=>sprintf('<b>%s</b>: %s (%s) for <b>%s</b>',_('Error'), htmlspecialchars($this->getErrorMessage($method)), htmlspecialchars($this->getErrorNum($method)), htmlspecialchars($method)),
 				'type'=>'error'));
 
 			return false;
@@ -1311,7 +1311,7 @@ class ldap extends DS {
 		# This error message is not localized as only developers should ever see it
 		if (! in_array($schema_to_fetch,$valid_schema_to_fetch))
 			error(sprintf('Bad parameter provided to function to %s::getRawSchema(). "%s" is not valid for the schema_to_fetch parameter.',
-					get_class($this),$schema_to_fetch),'error','index.php');
+					get_class($this), htmlspecialchars($schema_to_fetch)),'error','index.php');
 
 		# Try to get the schema DN from the specified entry.
 		$schema_dn = $this->getSchemaDN($method,$dn);
@@ -1537,7 +1537,7 @@ class ldap extends DS {
 		if (! isset($schema_entries[0][$schema_to_fetch])) {
 			if (in_array($schema_to_fetch,$schema_error_message_array)) {
 				error(sprintf('Our attempts to find your SCHEMA for "%s" have return UNEXPECTED results.<br /><br /><small>(We expected a "%s" in the $schema array but it wasnt there.)</small><br /><br />%s<br /><br />Dump of $schema_search:<hr /><pre><small>%s</small></pre>',
-					$schema_to_fetch,gettype($schema_search),$schema_error_message,serialize($schema_entries)),'error','index.php');
+				              htmlspecialchars($schema_to_fetch),gettype($schema_search), htmlspecialchars($schema_error_message), htmlspecialchars(serialize($schema_entries))),'error','index.php');
 
 			} else {
 				$return = false;
@@ -1782,7 +1782,7 @@ class ldap extends DS {
 
 						if (! isset($attrs[strtolower($sup_attr_name)])){
 							error(sprintf('Schema error: attributeType "%s" inherits from "%s", but attributeType "%s" does not exist.',
-								$attr->getName(),$sup_attr_name,$sup_attr_name),'error','index.php');
+							              htmlspecialchars($attr->getName()), htmlspecialchars($sup_attr_name), htmlspecialchars($sup_attr_name)),'error','index.php');
 							return;
 						}
 

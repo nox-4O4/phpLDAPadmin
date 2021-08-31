@@ -42,7 +42,7 @@ class page {
 		$this->_app['logo'] = IMGDIR.'/logo-small.png';
 
 		if (! is_null($index))
-			$this->_app['urlcss'] = sprintf('%s/%s',CSSDIR,$_SESSION[APPCONFIG]->getValue('appearance','stylesheet'));
+			$this->_app['urlcss'] = sprintf('%s/%s',CSSDIR, htmlspecialchars($_SESSION[APPCONFIG]->getValue('appearance','stylesheet')));
 		else
 			$this->_app['urlcss'] = sprintf('%s/%s',CSSDIR,'style.css');
 
@@ -110,22 +110,22 @@ class page {
 
 		if (isset($_SESSION[APPCONFIG]))
 			printf('<title>%s (%s) - %s%s</title>',
-				$this->_app['title'],
+			       htmlspecialchars($this->_app['title']),
 				app_version(),
 				$DNs ? htmlspecialchars($DNs).' ' : '',
 				$_SESSION[APPCONFIG]->getValue('appearance','page_title'));
 		else
-			printf('<title>%s - %s</title>',$this->_app['title'],app_version());
+			printf('<title>%s - %s</title>', htmlspecialchars($this->_app['title']),app_version());
 
 		echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/vnd.microsoft.icon" />';
 		# Style sheet.
 		printf('<link type="text/css" rel="stylesheet" href="%s" />',$this->_app['urlcss']);
 
 		if (defined('JSDIR')) {
-			printf('<link type="text/css" rel="stylesheet" media="all" href="%sjscalendar/calendar-blue.css" title="blue" />',JSDIR);
+			printf('<link type="text/css" rel="stylesheet" media="all" href="%sjscalendar/calendar-blue.css" title="blue" />',htmlspecialchars(JSDIR));
 			echo "\n";
-			printf('<script type="text/javascript" src="%sajax_functions.js"></script>',JSDIR);
-			printf('<script type="text/javascript" src="%sjscalendar/calendar.js"></script>',JSDIR);
+			printf('<script type="text/javascript" src="%sajax_functions.js"></script>',htmlspecialchars(JSDIR));
+			printf('<script type="text/javascript" src="%sjscalendar/calendar.js"></script>',htmlspecialchars(JSDIR));
 			echo "\n";
 		}
 
@@ -236,7 +236,7 @@ class page {
 			debug_log('Entered (%%)',129,0,__FILE__,__LINE__,__METHOD__,$fargs);
 
 		if (! is_object($object))
-			error(sprintf('block_add called with [%s], but it is not an object',serialize($object)));
+			error(sprintf('block_add called with [%s], but it is not an object', htmlspecialchars(serialize($object))));
 
 		$this->_block[$side][] = $object;
 	}
@@ -298,7 +298,7 @@ class page {
 
 		# Add the Session System Messages
 		if (isset($_SESSION['sysmsg']) && is_array($_SESSION['sysmsg'])) {
-			foreach ($_SESSION['sysmsg'] as $msg) 
+			foreach ($_SESSION['sysmsg'] as $msg)
 				$this->setsysmsg($msg);
 
 			unset($_SESSION['sysmsg']);
@@ -349,7 +349,7 @@ class page {
 				break;
 
 			default:
-				error(sprintf('show called with unknown frame [%s]',$frame),'error','index.php');
+				error(sprintf('show called with unknown frame [%s]', htmlspecialchars($frame)),'error','index.php');
 		}
 
 		if ($compress && ob_get_level() && isCompress()) {
@@ -375,7 +375,7 @@ class page {
 			'TREE'=>true,
 			'FOOT'=>true
 		);
-		
+
 		if ($_SESSION[APPCONFIG]->getValue('appearance','minimalMode')) {
 			$display = array(
 				'HEAD'=>false,
@@ -499,7 +499,7 @@ class block {
 			$output .= $this->body;
 
 		else {
-			$output .= sprintf('<table class="%s">',$side);
+			$output .= sprintf('<table class="%s">', htmlspecialchars($side));
 
 			if (isset($this->title))
 				$output .= sprintf('<tr><td class="head">%s</td></tr>',$this->title);

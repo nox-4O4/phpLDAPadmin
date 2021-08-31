@@ -99,9 +99,9 @@ class HTMLTree extends Tree {
 					$this->javascript .= '<input type="hidden" name="cmd" value="template_engine" />';
 					$this->javascript .= sprintf('<input type="hidden" name="server_id" value="%s" />',$server->getIndex());
 					$this->javascript .= sprintf('<input type="hidden" name="container" value="%s" />',htmlspecialchars($server->getContainer($base->getDN())));
-					$this->javascript .= sprintf('<input type="hidden" name="rdn" value="%s" />',get_rdn($base->getDN()));
-					$this->javascript .= sprintf('<input type="hidden" name="rdn_attribute[]" value="%s" />',$rdn[0]);
-					$this->javascript .= sprintf('<input type="hidden" name="new_values[%s][]" value="%s" />',$rdn[0],$rdn[1]);
+					$this->javascript .= sprintf('<input type="hidden" name="rdn" value="%s" />', htmlspecialchars(get_rdn($base->getDN())));
+					$this->javascript .= sprintf('<input type="hidden" name="rdn_attribute[]" value="%s" />', htmlspecialchars($rdn[0]));
+					$this->javascript .= sprintf('<input type="hidden" name="new_values[%s][]" value="%s" />', htmlspecialchars($rdn[0]), htmlspecialchars($rdn[1]));
 					$this->javascript .= '<input type="hidden" name="template" value="none" />';
 					$this->javascript .= '<input type="hidden" name="create_base" value="true" />';
 					$this->javascript .= '</div>';
@@ -139,7 +139,7 @@ class HTMLTree extends Tree {
 					break;
 
 				default:
-					die(sprintf('Error: %s hasnt been configured for auth_type %s',__METHOD__,$server->getAuthType()));
+					die(sprintf('Error: %s hasnt been configured for auth_type %s',__METHOD__, htmlspecialchars($server->getAuthType())));
 			}
 		}
 
@@ -165,7 +165,7 @@ class HTMLTree extends Tree {
 		echo '<tr class="server">';
 		printf('<td class="icon"><img src="%s/server.png" alt="%s" /></td>',IMGDIR,_('Server'));
 		printf('<td class="name" colspan="%s">',$this->getDepth()+3-1);
-		printf('%s',$server->getName());
+		printf('%s', htmlspecialchars($server->getName()));
 
 		if (! is_null($server->inactivityTime())) {
 			$m = sprintf(_('Inactivity will log you off at %s'),
@@ -321,10 +321,10 @@ class HTMLTree extends Tree {
 
 		if (isAjaxEnabled())
 			return sprintf('<a href="cmd.php?%s" onclick="return ajDISPLAY(\'%s\',\'%s\',\'%s\');" title="%s %s"><img src="%s/%s" alt="%s" /><br />%s</a>',
-				$href_parms,$menu['div'],$href_parms,$menu['ajax'],$menu['title'],$server->getName(),IMGDIR,$menu['img'],$menu['name'],$menu['name']);
+				$href_parms,$menu['div'],$href_parms,$menu['ajax'],$menu['title'], htmlspecialchars($server->getName()),IMGDIR,$menu['img'],$menu['name'],$menu['name']);
 		else
 			return sprintf('<a href="cmd.php?%s" title="%s %s"><img src="%s/%s" alt="%s" /><br />%s</a>',
-				$href_parms,$menu['title'],$server->getName(),IMGDIR,$menu['img'],$menu['name'],$menu['name']);
+				$href_parms,$menu['title'], htmlspecialchars($server->getName()),IMGDIR,$menu['img'],$menu['name'],$menu['name']);
 	}
 
 	protected function get_logout_menu_item() {
@@ -387,7 +387,7 @@ class HTMLTree extends Tree {
 				}
 
 			else
-				echo $logged_in_dn;
+				echo htmlspecialchars($logged_in_dn);
 
 		} else {
 			echo 'Anonymous';
@@ -447,7 +447,7 @@ class HTMLTree extends Tree {
 				printf('<td class="expander"><a href="%s"><img src="%s/plus.png" alt="+" /></a></td>',$href['expand'],IMGDIR);
 
 		printf('<td class="icon"><a href="%s" id="node_%s_%s"><img src="%s/%s" alt="img" /></a></td>',
-			$href['edit'],$server->getIndex(),preg_replace('/=/','_',base64_encode($item)),IMGDIR,$entry->getIcon());
+			$href['edit'],$server->getIndex(),preg_replace('/=/','_',base64_encode($item)),IMGDIR, htmlspecialchars($entry->getIcon()));
 
 		printf('<td class="phplm" colspan="%s" style="width: 100%%;"><span style="white-space: nowrap;">',$this->getDepth()+3-$level);
 		printf('<a href="%s">%s</a>',$href['edit'],$this->get_formatted_dn($entry,$level));
@@ -508,7 +508,7 @@ class HTMLTree extends Tree {
 		printf('<td class="spacer" colspan="%s"></td>',$level+3);
 		printf('<td class="icon"><a href="%s"><img src="%s/create.png" alt="%s" /></a></td>',$href,IMGDIR,_('new'));
 		printf('<td class="link" colspan="%s"><a href="%s" title="%s %s">%s</a></td>',
-			$this->getDepth()+3-$level,$href,_('Create a new entry in'),$rdn,_('Create new entry here'));
+			$this->getDepth()+3-$level,$href,_('Create a new entry in'), htmlspecialchars($rdn),_('Create new entry here'));
 		echo '</tr>';
 	}
 
@@ -526,9 +526,9 @@ class HTMLTree extends Tree {
 
 		if (isAjaxEnabled()) {
 			printf('<td class="icon"><a href="cmd.php?%s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');" title="%s %s"><img src="%s/%s" alt="%s" /></a></td>',
-				$href_parm,$href_parm,_('Loading Login'),_('Login to'),$server->getName(),IMGDIR,'login.png',_('login'));
+				$href_parm,$href_parm,_('Loading Login'),_('Login to'), htmlspecialchars($server->getName()),IMGDIR,'login.png',_('login'));
 			printf('<td class="logged_in" colspan="%s"><a href="cmd.php?%s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');" title="%s %s">%s</a></td>',
-				$this->getDepth()+3-2,$href_parm,$href_parm,_('Loading Login'),_('Login to'),$server->getName(),_('login'));
+				$this->getDepth()+3-2,$href_parm,$href_parm,_('Loading Login'),_('Login to'), htmlspecialchars($server->getName()),_('login'));
 
 		} else {
 			printf('<td class="icon"><a href="cmd.php?%s"><img src="%s/%s" alt="%s" /></a></td>',$href_parm,IMGDIR,'login.png',_('login'));

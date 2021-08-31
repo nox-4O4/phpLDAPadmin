@@ -49,7 +49,7 @@ class Importer {
 
 			default:
 				system_message(array(
-					'title'=>sprintf('%s %s',_('Unknown Import Type'),$this->template_id),
+					'title'=>sprintf('%s %s',_('Unknown Import Type'), htmlspecialchars($this->template_id)),
 					'body'=>_('phpLDAPadmin has not been configured for that import type'),
 					'type'=>'warn'),'index.php');
 
@@ -117,7 +117,7 @@ abstract class Import {
 		$server = $this->getServer();
 
 		switch ($template->getType()) {
-			case 'add': 
+			case 'add':
 				return $server->add($template->getDN(),$template->getLDAPadd());
 
 			case 'modify':
@@ -128,7 +128,7 @@ abstract class Import {
 				return $server->rename($template->getDN(),$template->modrdn['newrdn'],$template->modrdn['newsuperior'],$template->modrdn['deleteoldrdn']);
 
 			default:
-				debug_dump_backtrace(sprintf('Unknown template type %s',$template->getType()),1);
+				debug_dump_backtrace(sprintf('Unknown template type %s', htmlspecialchars($template->getType())),1);
 		}
 
 		return true;
@@ -172,7 +172,7 @@ class ImportLDIF extends Import {
 				list($text,$version) = $this->getAttrValue(array_shift($lines));
 
 				if ($version != 1)
-					return $this->error(sprintf('%s %s',_('LDIF import only suppports version 1'),$version),$lines);
+					return $this->error(sprintf('%s %s',_('LDIF import only suppports version 1'), htmlspecialchars($version)),$lines);
 
 				$haveVersion = true;
 				$lines = $this->nextLines();
@@ -212,7 +212,7 @@ class ImportLDIF extends Import {
 
 					case 'modify':
 						if (! $server->dnExists($dn))
-							return $this->error(sprintf('%s %s',_('DN does not exist'),$dn),$lines);
+							return $this->error(sprintf('%s %s',_('DN does not exist'), htmlspecialchars($dn)),$lines);
 
 						$this->template->setDN($dn);
 						$this->template->accept(false,true);
@@ -224,7 +224,7 @@ class ImportLDIF extends Import {
 					case 'moddn':
 					case 'modrdn':
 						if (! $server->dnExists($dn))
-							return $this->error(sprintf('%s %s',_('DN does not exist'),$dn),$lines);
+							return $this->error(sprintf('%s %s',_('DN does not exist'), htmlspecialchars($dn)),$lines);
 
 						$this->template->setDN($dn);
 						$this->template->accept();
@@ -367,7 +367,7 @@ class ImportLDIF extends Import {
 	}
 
 	private function error($msg,$data) {
-		$this->error['message'] = sprintf('%s [%s]',$msg,$this->template ? $this->template->getDN() : '');
+		$this->error['message'] = sprintf('%s [%s]',$msg,$this->template ? htmlspecialchars($this->template->getDN()) : '');
 		$this->error['line'] = $this->_currentLineNumber;
 		$this->error['data'] = $data;
 		$this->error['changetype'] = $this->template ? $this->template->getType() : 'Not set';
@@ -457,7 +457,7 @@ class ImportLDIF extends Import {
 					$attribute = $this->template->getAttribute($action_attribute_value);
 
 					if (is_null($attribute))
-						return $this->error(sprintf('%s %s',_('Attempting to delete a non existant attribute'),$action_attribute_value),
+						return $this->error(sprintf('%s %s',_('Attempting to delete a non existant attribute'), htmlspecialchars($action_attribute_value)),
 							array_merge(array($currentLine),$lines));
 
 					$deleteattr = true;
@@ -468,13 +468,13 @@ class ImportLDIF extends Import {
 					$attribute = $this->template->getAttribute($action_attribute_value);
 
 					if (is_null($attribute))
-						return $this->error(sprintf('%s %s',_('Attempting to replace a non existant attribute'),$action_attribute_value),
+						return $this->error(sprintf('%s %s',_('Attempting to replace a non existant attribute'), htmlspecialchars($action_attribute_value)),
 							array_merge(array($currentLine),$lines));
 
 					break;
 
 				default:
-					debug_dump_backtrace(sprintf('Unknown action %s',$action_attribute),1);
+					debug_dump_backtrace(sprintf('Unknown action %s', htmlspecialchars($action_attribute)),1);
 			}
 
 			# Fetch the attribute for the following line
@@ -514,7 +514,7 @@ class ImportLDIF extends Import {
 								if (($key = array_search($attribute_value_part,$attribute->getValues())) !== false)
 									$attribute->delValue($key);
 								else
-									return $this->error(sprintf('%s %s',_('Delete value doesnt exist in DN'),$attribute_value_part),
+									return $this->error(sprintf('%s %s',_('Delete value doesnt exist in DN'), htmlspecialchars($attribute_value_part)),
 										array_merge(array($currentLine),$lines));
 
 
@@ -529,15 +529,15 @@ class ImportLDIF extends Import {
 								break;
 
 							default:
-								debug_dump_backtrace(sprintf('Unexpected operation %s',$action_attribute));
+								debug_dump_backtrace(sprintf('Unexpected operation %s', htmlspecialchars($action_attribute)));
 						}
 
 					} else
-						return $this->error(sprintf('%s %s',_('The attribute to modify doesnt match the one specified by'),$action_attribute),
+						return $this->error(sprintf('%s %s',_('The attribute to modify doesnt match the one specified by'), htmlspecialchars($action_attribute)),
 							array_merge(array($currentLine),$lines));
 
 				} else
-					return $this->error(sprintf('%s %s',_('Attribute not valid'),$currentLine),
+					return $this->error(sprintf('%s %s',_('Attribute not valid'), htmlspecialchars($currentLine)),
 						array_merge(array($currentLine),$lines));
 
 				$currentLine = array_shift($lines);

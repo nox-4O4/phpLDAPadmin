@@ -46,7 +46,7 @@ foreach ($request['dn'] as $index => $dn) {
 
 # We can use the $render to give us a title
 $render->drawTitle(_('Bulk update the following DNs'));
-$render->drawSubTitle(sprintf('%s: <b>%s</b>',_('Server'),$app['server']->getName()));
+$render->drawSubTitle(sprintf('%s: <b>%s</b>',_('Server'), htmlspecialchars($app['server']->getName())));
 
 if (count($request['update'])) {
 	if (get_request('confirm','REQUEST')) {
@@ -57,9 +57,9 @@ if (count($request['update'])) {
 			$result = $app['server']->modify($template->getDN(),$template->getLDAPmodify(false,$index));
 
 			if ($result)
-				printf('%s: <b>%s</b><br>',$template->getDN(),_('Modification successful!'));
+				printf('%s: <b>%s</b><br>', htmlspecialchars($template->getDN()),_('Modification successful!'));
 			else
-				printf('%s: <b>%s</b><br>',$template->getDN(),_('Modification NOT successful!'));
+				printf('%s: <b>%s</b><br>', htmlspecialchars($template->getDN()),_('Modification NOT successful!'));
 		}
 
 	} else {
@@ -69,7 +69,7 @@ if (count($request['update'])) {
 		echo '<input type="hidden" name="confirm" value="1" />';
 
 		foreach ($request['update'] as $j => $page)
-			printf('<input type="hidden" name="dn[%s]" value="%s" />',$j,$page->getTemplate()->getDN());
+			printf('<input type="hidden" name="dn[%s]" value="%s" />', htmlspecialchars($j), htmlspecialchars($page->getTemplate()->getDN()));
 
 		echo '<table class="result_box" width="100%" border="1">';
 		echo '<tr><td>';
@@ -89,7 +89,7 @@ if (count($request['update'])) {
 
 			echo '<table class="result" border="0">';
 			echo '<tr class="list_title">';
-			printf('<td class="icon"><img src="%s/%s" alt="icon" /></td>',IMGDIR,get_icon($app['server']->getIndex(),$template->getDN()));
+			printf('<td class="icon"><img src="%s/%s" alt="icon" /></td>',IMGDIR,get_icon($app['server']->getIndex(), htmlspecialchars($template->getDN())));
 
 			printf('<td colspan="3"><a href="cmd.php?cmd=template_engine&amp;server_id=%s&amp;dn=%s">%s</a></td>',
 				$app['server']->getIndex(),rawurlencode(dn_unescape($template->getDN())),htmlspecialchars(get_rdn($template->getDN())));
@@ -111,7 +111,7 @@ if (count($request['update'])) {
 
 				if (! $attribute->getValueCount() || $attribute->isForceDelete()) {
 					printf('<span style="color: red">[%s]</span>',_('attribute deleted'));
-					printf('<input type="hidden" name="mass_values[%s][%s][%s]" value="%s" />',$index,$attribute->getName(),0,'');
+					printf('<input type="hidden" name="mass_values[%s][%s][%s]" value="%s" />', htmlspecialchars($index), htmlspecialchars($attribute->getName()),0,'');
 				}
 
 				foreach ($attribute->getValues() as $key => $value) {
@@ -126,7 +126,7 @@ if (count($request['update'])) {
 						echo '</span>';
 
 					echo '<br />';
-					printf('<input type="hidden" name="mass_values[%s][%s][%s]" value="%s" />',$index,$attribute->getName(),$key,$value);
+					printf('<input type="hidden" name="mass_values[%s][%s][%s]" value="%s" />', htmlspecialchars($index), htmlspecialchars($attribute->getName()), htmlspecialchars($key), htmlspecialchars($value));
 				}
 
 				echo '</span></td>';

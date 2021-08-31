@@ -443,7 +443,7 @@ abstract class DS {
 		return $this->index;
 	}
 
-	/** 
+	/**
 	 * Work out which connection method to use.
 	 * If a method is passed, then it will be passed back. If no method is passed, then we'll
 	 * check to see if the user is logged in. If they are, then 'user' is used, otherwise
@@ -614,7 +614,7 @@ class Datastore {
 			return $this->index;
 
 		} else {
-			printf('ERROR: Class [%s] doesnt exist',$type);
+			printf('ERROR: Class [%s] doesnt exist', htmlspecialchars($type));
 			die();
 		}
 	}

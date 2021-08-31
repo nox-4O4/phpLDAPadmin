@@ -42,7 +42,7 @@ abstract class xmlTemplates {
 
 					system_message(array(
 						'title'=>_('Template XML file removed.'),
-						'body'=>sprintf('%s %s (%s)',_('Template XML file has removed'),$template->getName(false),$template->getType()),
+						'body'=>sprintf('%s %s (%s)',_('Template XML file has removed'), htmlspecialchars($template->getName(false)), htmlspecialchars($template->getType())),
 						'type'=>'info','special'=>true));
 
 					continue;
@@ -53,7 +53,7 @@ abstract class xmlTemplates {
 
 					system_message(array(
 						'title'=>_('Template XML file changed.'),
-						'body'=>sprintf('%s %s (%s)',_('Template XML file has changed and been reread'),$template->getName(false),$template->getType()),
+						'body'=>sprintf('%s %s (%s)',_('Template XML file has changed and been reread'), htmlspecialchars($template->getName(false)), htmlspecialchars($template->getType())),
 						'type'=>'info','special'=>true));
 
 					$changed = true;
@@ -86,7 +86,7 @@ abstract class xmlTemplates {
 
 					if (! in_array($filename,$this->getTemplateFiles())) {
 						$templatename = preg_replace('/.xml$/','',$file);
-	
+
 						$this->templates[$index] = new $class['name']($this->server_id,$templatename,$filename,$type,$index);
 						$index++;
 
@@ -94,7 +94,7 @@ abstract class xmlTemplates {
 
 						system_message(array(
 							'title'=>_('New Template XML found.'),
-							'body'=>sprintf('%s %s (%s)',_('A new template XML file has been loaded'),$file,$type),
+							'body'=>sprintf('%s %s (%s)',_('A new template XML file has been loaded'), htmlspecialchars($file), htmlspecialchars($type)),
 							'type'=>'info','special'=>true));
 					}
 				}
@@ -173,7 +173,7 @@ abstract class xmlTemplates {
 				break;
 
 			default:
-				debug_dump_backtrace(sprintf('Unknown class %s',get_class($this)),1);
+				debug_dump_backtrace(sprintf('Unknown class %s', htmlspecialchars(get_class($this))),1);
 		}
 
 		return $class;
@@ -440,7 +440,7 @@ abstract class xmlTemplate {
 		if (preg_match('/;/',$name))
 			system_message(array(
 				'title'=>'phpLDAPadmin doesnt support RFC3866.',
-				'body'=>sprintf('%s {%s} (%s)','PLA might not do what you expect...',$name,(is_array($value) ? serialize($value) : $value)),
+				'body'=>sprintf('%s {%s} (%s)','PLA might not do what you expect...', htmlspecialchars($name), htmlspecialchars((is_array($value) ? serialize($value) : $value))),
 				'type'=>'warn'));
 
 		# If there isnt a schema item for this attribute

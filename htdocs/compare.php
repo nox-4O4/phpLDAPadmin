@@ -49,13 +49,13 @@ echo '<tr class="heading">';
 $href = sprintf('cmd.php?cmd=template_engine&server_id=%s&dn=%s',
 	$ldap['SRC']->getIndex(),rawurlencode($request['dnSRC']));
 printf('<td colspan="2" style="width: 40%%;">%s: <b>%s</b><br />%s: <b><a href="%s">%s</a></b></td>',
-	_('Server'),$ldap['SRC']->getName(),_('Distinguished Name'),
+	_('Server'), htmlspecialchars($ldap['SRC']->getName()),_('Distinguished Name'),
 	htmlspecialchars($href),$request['dnSRC']);
 
 $href = sprintf('cmd.php?cmd=template_engine&server_id=%s&dn=%s',
 	$ldap['DST']->getIndex(),rawurlencode($request['dnDST']));
 printf('<td colspan="2" style="width: 40%%;">%s: <b>%s</b><br />%s: <b><a href="%s">%s</a></b></td>',
-	_('Server'),$ldap['DST']->getName(),_('Distinguished Name'),
+	_('Server'), htmlspecialchars($ldap['DST']->getName()),_('Distinguished Name'),
 	htmlspecialchars($href),$request['dnDST']);
 
 echo '</tr>';

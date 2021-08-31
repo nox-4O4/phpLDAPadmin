@@ -69,7 +69,7 @@ class Query extends xmlTemplate {
 							$this->base = array($xmldata['query'][$xml_key]['base']);
 					else
 						error(sprintf(_('In the XML file (%s), [%s] contains an unknown key.'),
-							$this->filename,$xml_key),'error','index.php');
+							$this->filename, htmlspecialchars($xml_key)),'error','index.php');
 
 					$this->base = array_unique($this->base);
 					break;
@@ -99,7 +99,7 @@ class Query extends xmlTemplate {
 					if (! in_array($xml_key,$allowed_arrays) && is_array($xml_value)) {
 						debug_dump(array(__METHOD__,'key'=>$xml_key,'value'=>$xml_value));
 						error(sprintf(_('In the XML file (%s), [%s] is an array, it must be a string.'),
-							$this->filename,$xml_key),'error');
+							$this->filename, htmlspecialchars($xml_key)),'error');
 					}
 
 					$this->$xml_key = $xml_value;
@@ -111,7 +111,7 @@ class Query extends xmlTemplate {
 			if (! isset($this->$key)
 				|| (! is_array($this->$key) && ! trim($this->$key))) {
 
-				$this->setInvalid(sprintf(_('Missing %s in the XML file.'),$key));
+				$this->setInvalid(sprintf(_('Missing %s in the XML file.'), htmlspecialchars($key)));
 				break;
 			}
 		}
@@ -127,16 +127,16 @@ class Query extends xmlTemplate {
 		$server = $this->getServer();
 
 		$query = array();
-		$query['size_limit'] = get_request('size_limit','REQUEST',false,$_SESSION[APPCONFIG]->getValue('search','size_limit'));
-		$query['format'] = get_request('format','REQUEST',false,$_SESSION[APPCONFIG]->getValue('search','display'));
-		$query['orderby'] = get_request('orderby','REQUEST',false,'dn');
+		$query['size_limit'] = get_request('size_limit','REQUEST',false,$_SESSION[APPCONFIG]->getValue('search','size_limit'),false);
+		$query['format'] = get_request('format','REQUEST',false,$_SESSION[APPCONFIG]->getValue('search','display'),false);
+		$query['orderby'] = get_request('orderby','REQUEST',false,'dn',false);
 
 		# If this is a custom search, we need to populate are paramters
 		if ($this->getID() == 'none') {
-			$bases = get_request('base','REQUEST',false,null);
-			$query['filter'] = get_request('filter','REQUEST',false,'objectClass=*');
-			$query['scope'] = get_request('scope','REQUEST',false,'sub');
-			$attrs = get_request('display_attrs','REQUEST');
+			$bases = get_request('base','REQUEST',false,null,false);
+			$query['filter'] = get_request('filter','REQUEST',false,'objectClass=*',false);
+			$query['scope'] = get_request('scope','REQUEST',false,'sub',false);
+			$attrs = get_request('display_attrs','REQUEST',false,null,false);
 
 			$attrs = preg_replace('/\s+/','',$attrs);
 			if ($attrs)

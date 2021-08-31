@@ -21,7 +21,7 @@ $request['page']->setDN($request['dn']);
 $request['page']->accept();
 
 # Render the form
-$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Rename'),get_rdn($request['dn'])));
+$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Rename'), htmlspecialchars(get_rdn($request['dn']))));
 $request['page']->drawSubTitle();
 
 echo '<center>';

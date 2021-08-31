@@ -32,7 +32,7 @@ $request['children'] = $app['server']->getContainerContents($request['dn'],null,
 
 printf('<h3 class="title">%s %s</h3>',_('Delete'),htmlspecialchars(get_rdn($request['dn'])));
 printf('<h3 class="subtitle">%s: <b>%s</b> &nbsp;&nbsp;&nbsp; %s: <b>%s</b></h3>',
-	_('Server'),$app['server']->getName(),_('Distinguished Name'),$request['dn']);
+	_('Server'), htmlspecialchars($app['server']->getName()),_('Distinguished Name'),$request['dn']);
 echo "\n";
 
 echo '<center>';
@@ -106,7 +106,7 @@ if (count($request['children'])) {
 	$i = 0;
 	printf('<select size="%s" multiple disabled style="background:white; color:black;width:500px" >',min(10,count($request['search'])));
 	foreach ($request['search'] as $key => $value)
-		printf('<option>%s. %s</option>',++$i,dn_unescape($value['dn']));
+		printf('<option>%s. %s</option>',++$i, htmlspecialchars(dn_unescape($value['dn'])));
 	echo '</select>';
 	echo "\n";
 
@@ -116,7 +116,7 @@ if (count($request['children'])) {
 	printf('<tr><td colspan="4">%s</td></tr>',_('Are you sure you want to permanently delete this object?'));
 	echo '<tr><td colspan="4">&nbsp;</td></tr>';
 
-	printf('<tr><td style="width: 10%%;">%s:</td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',_('Server'),$app['server']->getName());
+	printf('<tr><td style="width: 10%%;">%s:</td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',_('Server'), htmlspecialchars($app['server']->getName()));
 	printf('<tr><td style="width: 10%%;"><acronym title="%s">%s</acronym></td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',
 		_('Distinguished Name'),_('DN'),$request['dn']);
 	echo '<tr><td colspan="4">&nbsp;</td></tr>';

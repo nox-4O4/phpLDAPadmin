@@ -44,9 +44,9 @@ class xml2array {
 
 		if (! $this->strXmlData)
 			die(sprintf('XML error: %s at line %d in file %s',
-				xml_error_string(xml_get_error_code($this->resParser)),
+			            htmlspecialchars(xml_error_string(xml_get_error_code($this->resParser))),
 				xml_get_current_line_number($this->resParser),
-				$filename));
+				        htmlspecialchars($filename)));
 
 		xml_parser_free($this->resParser);
 

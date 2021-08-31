@@ -32,7 +32,7 @@ echo '</script>';
 
 echo '<table class="forminput" width="100%" border="0">';
 if ($request['container']) {
-	printf('<tr><td class="heading" colspan="3">%s:</td><td>%s</td></tr>',_('Server'),$app['server']->getName());
+	printf('<tr><td class="heading" colspan="3">%s:</td><td>%s</td></tr>',_('Server'), htmlspecialchars($app['server']->getName()));
 	printf('<tr><td class="heading" colspan="3">%s:</td><td>%s</td></tr>',_('Looking in'),htmlspecialchars($request['container']));
 	echo '<tr><td class="blank" colspan="4">&nbsp;</td></tr>';
 }
@@ -99,7 +99,7 @@ if (isset($app['server']) && ! is_null($request['container'])) {
 } else {
 	foreach ($_SESSION[APPCONFIG]->getServerList() as $index => $server) {
 		if ($server->isLoggedIn(null)) {
-			printf('<tr><td class="heading" colspan="3">%s:</td><td class="heading">%s</td></tr>',_('Server'),$server->getName());
+			printf('<tr><td class="heading" colspan="3">%s:</td><td class="heading">%s</td></tr>',_('Server'), htmlspecialchars($server->getName()));
 			foreach ($server->getBaseDN() as $dn) {
 				if (! $dn) {
 					printf('<tr><td class="blank">&nbsp;</td><td colspan="3">(%s)</td></tr>',_('Could not determine base DN'));
@@ -112,7 +112,7 @@ if (isset($app['server']) && ! is_null($request['container'])) {
 					echo '<tr>';
 					echo '<td class="blank">&nbsp;</td>';
 					printf('<td colspan="2" class="icon"><a href="%s"><img src="%s/plus.png" alt="Plus" /></a></td>',$href['expand'],IMGDIR);
-					printf('<td colspan="2"><a href="%s">%s</a></td>',$href['return'],$dn);
+					printf('<td colspan="2"><a href="%s">%s</a></td>',$href['return'], htmlspecialchars($dn));
 				}
 			}
 

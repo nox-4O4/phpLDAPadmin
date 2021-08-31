@@ -27,7 +27,7 @@ $search = $app['server']->getDNAttrValues($request['dn'],null,LDAP_DEREF_NEVER,a
 
 # Dump the binary data to the browser
 $obStatus = ob_get_status();
-if (isset($obStatus['type']) && $obStatus['type'] && $obStatus['status']) 
+if (isset($obStatus['type']) && $obStatus['type'] && $obStatus['status'])
 	ob_end_clean();
 
 if (! isset($search[$request['attr']][$request['index']])) {

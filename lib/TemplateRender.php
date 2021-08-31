@@ -103,7 +103,7 @@ class TemplateRender extends PageRender {
 			default:
 				system_message(array(
 					'title'=>_('Unknown Default Attribute context'),
-					'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to getDefaultAttribute() with an unkown context'),$type),
+					'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to getDefaultAttribute() with an unkown context'), htmlspecialchars($type)),
 					'type'=>'warn'));
 
 				return;
@@ -147,7 +147,7 @@ class TemplateRender extends PageRender {
 				else
 					system_message(array(
 						'title'=>_('Function doesnt exist'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('An attempt was made to call a function that doesnt exist'),$function),
+						'body'=>sprintf('%s (<b>%s</b>)',_('An attempt was made to call a function that doesnt exist'), htmlspecialchars($function)),
 						'type'=>'warn'));
 
 				break;
@@ -516,7 +516,7 @@ class TemplateRender extends PageRender {
 		if (count($_POST)) {
 			echo '<div>';
 			foreach ($_POST as $p => $v)
-				printf('<input type="hidden" name="%s" value="%s" />',$p,$v);
+				printf('<input type="hidden" name="%s" value="%s" />', htmlspecialchars($p), htmlspecialchars($v));
 			echo '</div>';
 			echo "\n\n";
 		}
@@ -553,14 +553,14 @@ class TemplateRender extends PageRender {
 			else {
 				if (isAjaxEnabled())
 					printf('<td><input type="radio" name="template" value="%s" id="%s" onclick="return ajDISPLAY(\'BODY\',\'%s&amp;template=%s\',\'%s\');" /></td>',
-						htmlspecialchars($details->getID()),htmlspecialchars($details->getID()),htmlspecialchars($href_parms),$details->getID(),str_replace('\'','\\\'',_('Retrieving DN')));
+						htmlspecialchars($details->getID()),htmlspecialchars($details->getID()),htmlspecialchars($href_parms), htmlspecialchars($details->getID(),ENT_QUOTES),str_replace('\'','\\\'',_('Retrieving DN')));
 				else
 					printf('<td><input type="radio" name="template" value="%s" id="%s" onclick="document.getElementById(\'template_choice_form\').submit()" /></td>',
 						htmlspecialchars($details->getID()),htmlspecialchars($details->getID()));
 			}
 
 			printf('<td class="icon"><label for="%s"><img src="%s" alt="" /></label></td>',
-				htmlspecialchars($details->getID()),$details->getIcon());
+				htmlspecialchars($details->getID()), htmlspecialchars($details->getIcon()));
 			printf('<td class="label"><label for="%s">',
 				htmlspecialchars($details->getID()));
 
@@ -590,7 +590,7 @@ class TemplateRender extends PageRender {
 			echo '<tr>';
 			if (isAjaxEnabled())
 				printf('<td><input type="radio" name="template" value="none" id="none" onclick="return ajDISPLAY(\'BODY\',\'%s&amp;template=%s\',\'%s\');" /></td>',
-					htmlspecialchars($href_parms),'none',str_replace('\'','\\\'',_('Retrieving DN')));
+					htmlspecialchars($href_parms,ENT_QUOTES),'none',str_replace('\'','\\\'',_('Retrieving DN')));
 			else
 				echo '<td><input type="radio" name="template" value="none" id="none" onclick="document.getElementById(\'template_choice_form\').submit()" /></td>';
 
@@ -652,7 +652,7 @@ class TemplateRender extends PageRender {
 
 		} elseif ($this->template->getContext() == 'copyasnew') {
 			$this->drawStepFormStart($this->page);
-			printf('<input type="hidden" name="container" value="%s" />',$this->template->getContainer(false));
+			printf('<input type="hidden" name="container" value="%s" />', htmlspecialchars($this->template->getContainer(false)));
 			echo '<div><table>';
 			$this->drawRDNChooser();
 			echo '</table></div>';
@@ -686,7 +686,7 @@ class TemplateRender extends PageRender {
 		# Title
 		$this->drawTitle();
 		if (get_request('create_base'))
-			$this->drawSubTitle(sprintf('<b>%s</b>: %s',_('Creating Base DN'),$this->template->getDN()));
+			$this->drawSubTitle(sprintf('<b>%s</b>: %s',_('Creating Base DN'), htmlspecialchars($this->template->getDN())));
 		else
 			$this->drawSubTitle();
 		echo "\n";
@@ -724,28 +724,28 @@ class TemplateRender extends PageRender {
 		switch ($this->getMode()) {
 			case 'creation':
 				$subtitle = sprintf('%s: <b>%s</b>&nbsp;&nbsp;&nbsp;%s: <b>%s</b>',
-					_('Server'),$this->getServer()->getName(),
+					_('Server'), htmlspecialchars($this->getServer()->getName()),
 					_('Container'),htmlspecialchars($this->container));
 
 				if ($this->template_id) {
 					$subtitle .= '<br />';
-					$subtitle .= sprintf('%s: <b>%s</b>',_('Template'),$this->template->getID() != 'none' ? $this->template->getTitle() : _('Default'));
+					$subtitle .= sprintf('%s: <b>%s</b>',_('Template'),$this->template->getID() != 'none' ? htmlspecialchars($this->template->getTitle()) : _('Default'));
 					if ($this->template->getName())
-						$subtitle .= sprintf(' (<b>%s</b>)',$this->template->getName(false));
+						$subtitle .= sprintf(' (<b>%s</b>)', htmlspecialchars($this->template->getName(false)));
 				}
 
 				break;
 
 			case 'modification':
 				$subtitle = sprintf('%s: <b>%s</b>&nbsp;&nbsp;&nbsp;%s: <b>%s</b>',
-					_('Server'),$this->getServer()->getName(),
+					_('Server'), htmlspecialchars($this->getServer()->getName()),
 					_('Distinguished Name'),htmlspecialchars($this->dn));
 
 				if ($this->template_id) {
 					$subtitle .= '<br />';
-					$subtitle .= sprintf('%s: <b>%s</b>',_('Template'),$this->template->getID() != 'none' ? $this->template->getTitle() : _('Default'));
+					$subtitle .= sprintf('%s: <b>%s</b>',_('Template'),$this->template->getID() != 'none' ? htmlspecialchars($this->template->getTitle()) : _('Default'));
 					if ($this->template->getName())
-						$subtitle .= sprintf(' (<b>%s</b>)',$this->template->getName(false));
+						$subtitle .= sprintf(' (<b>%s</b>)', htmlspecialchars($this->template->getName(false)));
 				}
 
 				break;
@@ -1030,8 +1030,8 @@ class TemplateRender extends PageRender {
 
 		return sprintf($this->layout['hint'],
 			(count($modified_attributes) == 1) ?
-			sprintf(_('An attribute (%s) was modified and is highlighted below.'),implode('',$modified_attributes)) :
-			sprintf(_('Some attributes (%s) were modified and are highlighted below.'),implode(', ',$modified_attributes)));
+			sprintf(_('An attribute (%s) was modified and is highlighted below.'), htmlspecialchars(implode('',$modified_attributes))) :
+			sprintf(_('Some attributes (%s) were modified and are highlighted below.'), htmlspecialchars(implode(', ',$modified_attributes))));
 	}
 
 	protected function getReadOnlyMessage() {
@@ -1239,11 +1239,11 @@ class TemplateRender extends PageRender {
 			return sprintf($this->layout['actionajax'],IMGDIR,'children.png',_('Children'),
 				htmlspecialchars($href),_('View the children of this object'),
 				htmlspecialchars($href),str_replace('\'','\\\'',_('Loading')),
-				($children_count == 1) ? _('View 1 child') : sprintf(_('View %s children'),$children_count));
+				($children_count == 1) ? _('View 1 child') : sprintf(_('View %s children'),(int)$children_count));
 		else
 			return sprintf($this->layout['action'],IMGDIR,'children.png',_('Children'),
 				htmlspecialchars($href),_('View the children of this object'),
-				($children_count == 1) ? _('View 1 child') : sprintf(_('View %s children'),$children_count));
+				($children_count == 1) ? _('View 1 child') : sprintf(_('View %s children'),(int)$children_count));
 	}
 
 	protected function getMenuItemExportSub() {
@@ -1288,7 +1288,7 @@ class TemplateRender extends PageRender {
 				if ($attr->getName() != 'objectclass') {
 					$m = $attr->getFriendlyName();
 					$b = '&nbsp;';
-					printf('<option value="%s">%s%s(%s)</option>',$n,$m,$b,$n);
+					printf('<option value="%s">%s%s(%s)</option>', htmlspecialchars($n), htmlspecialchars($m),$b, htmlspecialchars($n));
 				}
 			}
 
@@ -1316,7 +1316,7 @@ class TemplateRender extends PageRender {
 		printf('<td class="heading">%s</td>',_('Container'));
 		echo '<td>';
 		if (get_request('create_base'))
-			printf('%s<input type="hidden" name="container" size="40" value="%s" />',$default_container,htmlspecialchars($default_container));
+			printf('%s<input type="hidden" name="container" size="40" value="%s" />', htmlspecialchars($default_container),htmlspecialchars($default_container));
 		else {
 			printf('<input type="text" name="container" size="40" value="%s" />',htmlspecialchars($default_container));
 			draw_chooser_link('entry_form','container');
@@ -1345,7 +1345,7 @@ class TemplateRender extends PageRender {
 
 			printf('<option %s value="%s">%s</option>',
 				($oclass->getType() == 'structural') ? 'style="font-weight: bold" ' : '',
-				htmlspecialchars($oclass->getName(false)),$oclass->getName(false));
+				htmlspecialchars($oclass->getName(false)), htmlspecialchars($oclass->getName(false)));
 		}
 
 		echo '</select>';
@@ -1394,9 +1394,9 @@ class TemplateRender extends PageRender {
 		if (DEBUGTMP) printf('<font size=-2>%s</font><br />',__METHOD__);
 
 		echo '<div>';
-		printf('<input type="hidden" name="server_id" value="%s" />',$this->getServerID());
-		printf('<input type="hidden" name="dn" value="%s" />',$this->template->getDNEncode(false));
-		printf('<input type="hidden" name="template" value="%s" />',$this->template->getID());
+		printf('<input type="hidden" name="server_id" value="%s" />', htmlspecialchars($this->getServerID()));
+		printf('<input type="hidden" name="dn" value="%s" />', htmlspecialchars($this->template->getDNEncode(false)));
+		printf('<input type="hidden" name="template" value="%s" />', htmlspecialchars($this->template->getID()));
 		echo '</div>';
 
 		echo '<table class="entry" cellspacing="0" border="0" style="margin-left: auto; margin-right: auto;">';
@@ -1420,8 +1420,8 @@ class TemplateRender extends PageRender {
 			if (get_request('rdn')) {
 				$rdn = explode('=',get_request('rdn'));
 				echo '<div>';
-				printf('<input type="hidden" name="new_values[%s][]" value="%s" />',$rdn[0],$rdn[1]);
-				printf('<input type="hidden" name="rdn_attribute[]" value="%s" />',$rdn[0]);
+				printf('<input type="hidden" name="new_values[%s][]" value="%s" />', htmlspecialchars($rdn[0]), htmlspecialchars($rdn[1]));
+				printf('<input type="hidden" name="rdn_attribute[]" value="%s" />', htmlspecialchars($rdn[0]));
 				echo '</div>';
 			}
 		}
@@ -1437,7 +1437,7 @@ class TemplateRender extends PageRender {
 			printf('<img src="%s/plus.png" alt="Plus" onclick="if (document.getElementById(\'DEBUGtemplate\').style.display == \'none\') { document.getElementById(\'DEBUGtemplate\').style.display = \'block\' } else { document.getElementById(\'DEBUGtemplate\').style.display = \'none\' };"/>',IMGDIR);
 			echo '<div id="DEBUGtemplate" style="display: none">';
 			echo '<fieldset>';
-			printf('<legend>DEBUG: %s</legend>',$this->template->getDescription());
+			printf('<legend>DEBUG: %s</legend>', htmlspecialchars($this->template->getDescription()));
 			echo '<textarea cols="120" rows="20">';
 			debug_dump($this);
 			echo '</textarea>';
@@ -1467,7 +1467,7 @@ class TemplateRender extends PageRender {
 			$this->pagelast = 2;
 
 			echo '<h4 style="text-align: center;">';
-			printf('%s: ',sprintf(_('Step %s of %s'),$page,$this->pagelast));
+			printf('%s: ',sprintf(_('Step %s of %s'),(int)$page,$this->pagelast));
 
 			if ($page == 1)
 				echo _('Container and ObjectClass(es)');
@@ -1479,7 +1479,7 @@ class TemplateRender extends PageRender {
 		} elseif ($this->template->getDescription())
 			printf('<h4 style="text-align: center;">%s (%s)</h4>',
 				_($this->template->getDescription()),
-				sprintf(_('Step %s of %s'),$page,$this->pagelast));
+				sprintf(_('Step %s of %s'),(int)$page,(int)$this->pagelast));
 	}
 
 	private function drawStepFormStart($page) {
@@ -1503,8 +1503,8 @@ class TemplateRender extends PageRender {
 	protected function drawStepForm($page) {
 		if (DEBUGTMP) printf('<font size=-2>%s</font><br />',__METHOD__);
 
-		printf('<input type="hidden" name="server_id" value="%s" />',$this->getServerID());
-		printf('<input type="hidden" name="template" value="%s" />',$this->template->getID());
+		printf('<input type="hidden" name="server_id" value="%s" />', htmlspecialchars($this->getServerID()));
+		printf('<input type="hidden" name="template" value="%s" />', htmlspecialchars($this->template->getID()));
 		printf('<input type="hidden" name="page" value="%s" />',$page+1);
 		if (get_request('create_base'))
 			echo '<input type="hidden" name="create_base" value="true" />';
@@ -1520,7 +1520,7 @@ class TemplateRender extends PageRender {
 				$this->drawObjectClassChooser();
 
 		} else {
-			printf('<input type="hidden" name="container" value="%s" />',$this->template->getContainerEncode(false));
+			printf('<input type="hidden" name="container" value="%s" />', htmlspecialchars($this->template->getContainerEncode(false)));
 			echo '</div>';
 
 			echo '<table class="entry" cellspacing="0" border="0" style="margin-left: auto; margin-right: auto;">';
@@ -1619,9 +1619,9 @@ class TemplateRender extends PageRender {
 		printf('<!-- START: %s -->',__METHOD__);
 		echo "\n";
 
-		printf('<script type="text/javascript" src="%sTemplateRender.js"></script>',JSDIR);
-		printf('<script type="text/javascript" src="%stoAscii.js"></script>',JSDIR);
-		printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',JSDIR);
+		printf('<script type="text/javascript" src="%sTemplateRender.js"></script>',htmlspecialchars(JSDIR));
+		printf('<script type="text/javascript" src="%stoAscii.js"></script>',htmlspecialchars(JSDIR));
+		printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',htmlspecialchars(JSDIR));
 		echo "\n";
 
 		printf('<!-- START: MAIN FORM VALIDATION: %s -->',__METHOD__);
@@ -1739,11 +1739,11 @@ function fillRec(id,value) {
 				$attr = $attribute->getName();
 
 				printf("
-		else if ((i = id.indexOf('_%s_')) >= 0) {",$attr);
+		else if ((i = id.indexOf('_%s_')) >= 0) {", htmlspecialchars($attr,ENT_QUOTES));
 				echo "
 			pre = id.substring(0,i+1);";
 				printf("
-			suf = id.substring(i + 1 + '%s'.length,id.length);\n",$attr);
+			suf = id.substring(i + 1 + '%s'.length,id.length);\n", htmlspecialchars($attr,ENT_QUOTES));
 
 				$this->draw('FillJavascript',$attribute,'id','value');
 
@@ -1865,7 +1865,7 @@ function fillRec(id,value) {
 
 		else {
 			if ($icon = $attribute->getIcon())
-				printf('<img src="%s" alt="Icon" style="float: right;" />&nbsp;',$icon);
+				printf('<img src="%s" alt="Icon" style="float: right;" />&nbsp;', htmlspecialchars($icon));
 		}
 	}
 
@@ -1876,9 +1876,9 @@ function fillRec(id,value) {
 			printf('<img src="%s/ldap-alias.png" alt="Go" style="float: right;" />&nbsp;',IMGDIR);
 		elseif ($this->getServer()->dnExists($val))
 			printf('<a href="cmd.php?cmd=template_engine&amp;server_id=%s&amp;dn=%s" title="%s %s"><img src="%s/ldap-alias.png" alt="Go" /></a>&nbsp;',
-				$this->getServerID(),rawurlencode($val),_('Go to'),$val,IMGDIR);
+			       htmlspecialchars($this->getServerID()),rawurlencode($val),_('Go to'), htmlspecialchars($val),IMGDIR);
 		else
-			printf('<a title="%s %s"><img src="%s/nogo.png" alt="Go" /></a>&nbsp;',_('DN not available'),$val,IMGDIR);
+			printf('<a title="%s %s"><img src="%s/nogo.png" alt="Go" /></a>&nbsp;',_('DN not available'), htmlspecialchars($val),IMGDIR);
 	}
 
 	protected function drawMailValueIconAttribute($attribute,$val) {
@@ -1911,19 +1911,19 @@ function fillRec(id,value) {
 
 	protected function drawJavascriptAttribute($attribute) {
 		if (! $attribute->needJS()) {
-			printf('<!-- NO JS REQUIRED FOR %s -->',$attribute->getName());
+			printf('<!-- NO JS REQUIRED FOR %s -->', htmlspecialchars($attribute->getName()));
 			echo "\n";
 			return;
 		}
 
-		printf('<!-- START: ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- START: ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 
 		echo '<script type="text/javascript">'."\n";
 
 		echo '// focus'."\n";
 		if ($attribute->needJS('focus')) {
-			printf('function focus_%s(component) {',$attribute->getName());
+			printf('function focus_%s(component) {', htmlspecialchars($attribute->getName()));
 			echo "\n";
 			$this->draw('FocusJavascript',$attribute,'component');
 			echo "};\n";
@@ -1931,14 +1931,14 @@ function fillRec(id,value) {
 
 		echo '// blur'."\n";
 		if ($attribute->needJS('blur')) {
-			printf('function blur_%s(component) {',$attribute->getName());
+			printf('function blur_%s(component) {', htmlspecialchars($attribute->getName()));
 			echo "\n";
 			$this->draw('BlurJavascript',$attribute,'component');
 			echo "};\n";
 		}
 
 		echo '// validate'."\n";
-		printf('function validate_%s(component,silence) {',$attribute->getName());
+		printf('function validate_%s(component,silence) {', htmlspecialchars($attribute->getName()));
 		echo "\n";
 
 		if ($attribute->needJS('validate')) {
@@ -1958,7 +1958,7 @@ function fillRec(id,value) {
 
 		echo '</script>'."\n";
 
-		printf('<!-- END: ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- END: ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 	}
 
@@ -1977,8 +1977,8 @@ function fillRec(id,value) {
 
 		if (DEBUGTMP) printf('<font size=-2>%s</font><br />',__METHOD__);
 
-		$j = "\t".'fill('.$component.'.id,pla_getComponentValue('.$component.'));'."\n";
-		$j .= "\t".'validate_'.$attribute->getName().'('.$component.',false);'."\n";
+		$j = "\t".'fill('. htmlspecialchars($component,ENT_QUOTES).'.id,pla_getComponentValue('. htmlspecialchars($component,ENT_QUOTES).'));'."\n";
+		$j .= "\t".'validate_'. htmlspecialchars($attribute->getName()).'('. htmlspecialchars($component,ENT_QUOTES).',false);'."\n";
 
 		return $j;
 	}
@@ -1993,18 +1993,18 @@ function fillRec(id,value) {
 
 	protected function drawFillJavascriptAttribute($attribute,$component_id,$component_value) {
 		if ($attribute->needJS('validate'))
-			printf("\tvalidate_%s(pla_getComponentById(%s),true);\n",$attribute->getName(),$component_id);
+			printf("\tvalidate_%s(pla_getComponentById(%s),true);\n", htmlspecialchars($attribute->getName()), htmlspecialchars($component_id));
 	}
 
 	protected function drawValidateJavascriptAttribute($attribute,$component,$silence,$var_valid) {
-		printf('var vals = getAttributeValues("new","%s");',$attribute->getName());
+		printf('var vals = getAttributeValues("new","%s");', htmlspecialchars($attribute->getName()));
 		echo 'if (vals.length <= 0) {';
-		printf('%s = false;',$var_valid);
-		printf('alertError("%s: %s",%s);',_('This attribute is required'),$attribute->getFriendlyName(),$silence);
+		printf('%s = false;', htmlspecialchars($var_valid,ENT_QUOTES));
+		printf('alertError("%s: %s",%s);',_('This attribute is required'), htmlspecialchars($attribute->getFriendlyName(),ENT_QUOTES), htmlspecialchars($silence,ENT_QUOTES));
 		echo '}';
 		echo "\n";
 
-		printf('var comp = getAttributeComponents("new","%s");',$attribute->getName());
+		printf('var comp = getAttributeComponents("new","%s");', htmlspecialchars($attribute->getName(),ENT_QUOTES));
 		echo 'for (var i = 0; i < comp.length; i++) {';
 		printf('comp[i].style.backgroundColor = "%s";',$var_valid ? 'white' : '#FFFFA0');
 		echo '}';
@@ -2085,11 +2085,11 @@ function fillRec(id,value) {
 
 		if (isAjaxEnabled())
 			return sprintf('(<a href="cmd.php?%s" title="%s %s" onclick="return ajDISPLAY(\'ADDVALUE%s\',\'%s&amp;raw=1\',\'%s\',1);">%s</a>)',
-				$href_parm,_('Add an additional value to attribute'),$attribute->getName(false),$attribute->getName(),
+				$href_parm,_('Add an additional value to attribute'), htmlspecialchars($attribute->getName(false)), htmlspecialchars($attribute->getName()),
 				$href_parm,str_replace('\'','\\\'',_('Add Value to Attribute')),_('add value'));
 		else
 			return sprintf('(<a href="cmd.php?%s" title="%s %s">%s</a>)',
-				$href_parm,_('Add an additional value to attribute'),$attribute->getName(false),_('add value'));
+				$href_parm,_('Add an additional value to attribute'), htmlspecialchars($attribute->getName(false)),_('add value'));
 	}
 
 	protected function getAddValueMenuItemObjectClassAttribute($attribute) {
@@ -2103,11 +2103,11 @@ function fillRec(id,value) {
 
 		if (isAjaxEnabled())
 			return sprintf('(<a href="cmd.php?%s" title="%s %s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');">%s</a>)',
-				$href_parm,_('Add an additional value to attribute'),$attribute->getName(false),
+				$href_parm,_('Add an additional value to attribute'), htmlspecialchars($attribute->getName(false)),
 				$href_parm,str_replace('\'','\\\'',_('Add Value to Attribute')),_('add value'));
 		else
 			return sprintf('(<a href="cmd.php?%s" title="%s %s">%s</a>)',
-				$href_parm,_('Add an additional value to attribute'),$attribute->getName(false),_('add value'));
+				$href_parm,_('Add an additional value to attribute'), htmlspecialchars($attribute->getName(false)),_('add value'));
 	}
 
 	protected function getModifyMemberMenuItemAttribute($attribute) {
@@ -2121,12 +2121,12 @@ function fillRec(id,value) {
 
 		if (isAjaxEnabled())
 			return sprintf('(<a href="cmd.php?%s" title="%s: %s" onclick="return ajDISPLAY(\'BODY\',\'%s\',\'%s\');">%s</a>)',
-				htmlspecialchars($href),_('Modify members for'),$this->template->getDN(),
+				htmlspecialchars($href),_('Modify members for'), htmlspecialchars($this->template->getDN()),
 				htmlspecialchars($href),str_replace('\'','\\\'',_('Modify group membership')),
 				_('modify group members'));
 		else
 			return sprintf('(<a href="cmd.php?%s" title="%s: %s">%s</a>)',
-				htmlspecialchars($href),_('Modify members for'),$this->template->getDN(),_('modify group members'));
+				htmlspecialchars($href),_('Modify members for'), htmlspecialchars($this->template->getDN()),_('modify group members'));
 	}
 
 	protected function getRenameMenuItemAttribute($attribute) {
@@ -2229,18 +2229,18 @@ function fillRec(id,value) {
 			$found = false;
 
 			printf('<select name="%s[%s][%s]" id="%s_%s_%s">',
-				$id,htmlspecialchars($attribute->getName()),$i,
-				$id,htmlspecialchars($attribute->getName()),$i);
+			       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i),
+			       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i));
 
 			foreach ($vals as $v) {
-				printf('<option value="%s" %s>%s</option>',$v,($v == $default) ? 'selected="selected"' : '',$v);
+				printf('<option value="%s" %s>%s</option>', htmlspecialchars($v),($v == $default) ? 'selected="selected"' : '', htmlspecialchars($v));
 
 				if ($v == $default)
 					$found = true;
 			}
 
 			if (! $found)
-				printf('<option value="%s" selected="selected">%s</option>',$default,$default ? $default : '&nbsp;');
+				printf('<option value="%s" selected="selected">%s</option>', htmlspecialchars($default),$default ? htmlspecialchars($default) : '&nbsp;');
 
 			echo '</select>';
 
@@ -2250,14 +2250,14 @@ function fillRec(id,value) {
 				$vals = '';
 
 			printf('<input type="text" name="%s[%s][%s]" id="%s_%s_%s" value="%s" size="4" />',
-				$id,htmlspecialchars($attribute->getName()),$i,
-				$id,htmlspecialchars($attribute->getName()),$i,
+			       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i),
+			       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i),
 				htmlspecialchars($vals));
 		}
 
 		if ($display) {
 			echo '<div class="helper">';
-			printf('<span class="hint">%s</span>',$display);
+			printf('<span class="hint">%s</span>', htmlspecialchars($display));
 			echo '</div>';
 		}
 	}
@@ -2285,14 +2285,14 @@ function fillRec(id,value) {
 		else
 			$drawn = true;
 
-		printf('<!-- START: BINARY ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- START: BINARY ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 
 		echo '<!-- This form is submitted by JavaScript when the user clicks "Delete attribute" on a binary attribute -->';
 		echo '<form id="delete_attribute_form" action="cmd.php?cmd=delete_attr" method="post">';
-		printf('<input type="hidden" name="server_id" value="%s" />',$this->getServerID());
-		printf('<input type="hidden" name="dn" value="%s" />',$this->template->getDNEncode(false));
-		printf('<input type="hidden" name="template" value="%s" />',$this->template->getID());
+		printf('<input type="hidden" name="server_id" value="%s" />', htmlspecialchars($this->getServerID()));
+		printf('<input type="hidden" name="dn" value="%s" />', htmlspecialchars($this->template->getDNEncode(false)));
+		printf('<input type="hidden" name="template" value="%s" />', htmlspecialchars($this->template->getID()));
 		echo '<input type="hidden" name="attr" value="FILLED IN BY JAVASCRIPT" />';
 		echo '<input type="hidden" name="index" value="FILLED IN BY JAVASCRIPT" />';
 		echo '</form>';
@@ -2310,7 +2310,7 @@ function deleteAttribute(attrName,friendlyName,i)
 </script>';
 		echo "\n";
 
-		printf('<!-- END: BINARY ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- END: BINARY ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 	}
 
@@ -2319,7 +2319,7 @@ function deleteAttribute(attrName,friendlyName,i)
 	protected function drawJavaScriptDateAttribute($attribute) {
 		if (DEBUGTMP) printf('<font size=-2>%s</font><br />',__METHOD__);
 
-		printf('<!-- START: DATE ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- START: DATE ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 
 		$this->drawJavaScriptAttribute($attribute);
@@ -2328,9 +2328,9 @@ function deleteAttribute(attrName,friendlyName,i)
 
 		# This JS may have been rendered by multiple Date attributes
 		if (! $drawn) {
-			printf('<script type="text/javascript" src="%sjscalendar/lang/calendar-en.js"></script>',JSDIR);
-			printf('<script type="text/javascript" src="%sjscalendar/calendar-setup.js"></script>',JSDIR);
-			printf('<script type="text/javascript" src="%sdate_selector.js"></script>',JSDIR);
+			printf('<script type="text/javascript" src="%sjscalendar/lang/calendar-en.js"></script>',htmlspecialchars(JSDIR));
+			printf('<script type="text/javascript" src="%sjscalendar/calendar-setup.js"></script>',htmlspecialchars(JSDIR));
+			printf('<script type="text/javascript" src="%sdate_selector.js"></script>',htmlspecialchars(JSDIR));
 
 			$drawn = true;
 		}
@@ -2344,15 +2344,15 @@ function deleteAttribute(attrName,friendlyName,i)
 			$config['format'] = $config['date'][$attribute->getName()];
 
 		for ($i=0;$i<=$attribute->getValueCount();$i++) {
-			printf('<script type="text/javascript">defaults[\'new_values_%s_%s\'] = \'%s\';</script>',$attribute->getName(),$i,$config['format']);
+			printf('<script type="text/javascript">defaults[\'new_values_%s_%s\'] = \'%s\';</script>', htmlspecialchars($attribute->getName(),ENT_QUOTES),$i, htmlspecialchars($config['format'],ENT_QUOTES));
 
 			if (in_array_ignore_case($attribute->getName(),array_keys($config['time'])) && ($config['time'][$attribute->getName()]))
-				printf('<script type="text/javascript">defaults[\'f_time_%s_%s\'] = \'%s\';</script>',$attribute->getName(),$i,'true');
+				printf('<script type="text/javascript">defaults[\'f_time_%s_%s\'] = \'%s\';</script>', htmlspecialchars($attribute->getName(),ENT_QUOTES),$i,'true');
 
 			echo "\n";
 		}
 
-		printf('<!-- END: DATE ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- END: DATE ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 	}
 
@@ -2361,7 +2361,7 @@ function deleteAttribute(attrName,friendlyName,i)
 	 */
 	protected function drawSelectorPopupDateAttribute($attribute,$i) {
 		printf('<a href="javascript:dateSelector(\'%s_%s\');" title="%s"><img src="%s/calendar.png" alt="Calendar" class="chooser" id="f_trigger_%s_%s" style="cursor: pointer;" /></a>',
-			$attribute->getName(),$i,_('Click to popup a dialog to select a date graphically'),IMGDIR,$attribute->getName(),$i);
+		       htmlspecialchars($attribute->getName(),ENT_QUOTES), htmlspecialchars($i,ENT_QUOTES),_('Click to popup a dialog to select a date graphically'),IMGDIR, htmlspecialchars($attribute->getName()), htmlspecialchars($i));
 	}
 
 	/** DN ATTRIBUTES **/
@@ -2399,7 +2399,7 @@ function deleteAttribute(attrName,friendlyName,i)
 		else
 			$drawn[$attribute->getName()] = true;
 
-		printf('<!-- START: PASSWORD ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- START: PASSWORD ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 
 		$this->drawJavascriptAttribute($attribute);
@@ -2415,7 +2415,7 @@ function deleteAttribute(attrName,friendlyName,i)
 </script>';
 		echo "\n";
 
-		printf('<!-- END: PASSWORD ATTRIBUTE %s (%s)-->',__METHOD__,$attribute->getName());
+		printf('<!-- END: PASSWORD ATTRIBUTE %s (%s)-->',__METHOD__, htmlspecialchars($attribute->getName()));
 		echo "\n";
 	}
 
@@ -2423,7 +2423,7 @@ function deleteAttribute(attrName,friendlyName,i)
 		if (DEBUGTMP) printf('<font size=-2>%s</font><br />',__METHOD__);
 
 		printf('<small><a href="javascript:passwordComparePopup(\'%s\',\'%s\')">%s...</a></small><br />',
-			$component_id,$attribute->getName(),_('Check password'));
+		       htmlspecialchars($component_id,ENT_QUOTES), htmlspecialchars($attribute->getName(),ENT_QUOTES),_('Check password'));
 	}
 
 	/** RANDOM PASSWORD **/
@@ -2446,20 +2446,20 @@ function deleteAttribute(attrName,friendlyName,i)
 		printf("\n<!-- %s -->\n",__METHOD__);
 		echo '<script type="text/javascript">'."\n";
 		echo 'var i = 0;'."\n";
-		printf('var component = document.getElementById(\'new_values_%s_\'+i);',$attribute->getName());
+		printf('var component = document.getElementById(\'new_values_%s_\'+i);', htmlspecialchars($attribute->getName(),ENT_QUOTES));
 		echo "\n";
 		echo 'while (component) {'."\n";
 		echo '	if (!component.value) {'."\n";
-		printf('		component.value = \'%s\';',$pwd);
+		printf('		component.value = \'%s\';', htmlspecialchars($pwd,ENT_QUOTES));
 		echo "\n";
-		printf('		alert(\'%s:\n%s\');',_('A random password was generated for you'),$pwd);
+		printf('		alert(\'%s:\n%s\');',_('A random password was generated for you'), htmlspecialchars($pwd,ENT_QUOTES));
 		echo "\n";
 		echo '	};'."\n";
 		echo '	i++;'."\n";
-		printf('	component = document.getElementById(\'new_values_%s_\'+i);',$attribute->getName());
+		printf('	component = document.getElementById(\'new_values_%s_\'+i);', htmlspecialchars($attribute->getName(),ENT_QUOTES));
 		echo "\n";
 		# It seems that JS gets stuck in a loop if there isnt a command here? - normally this alert isnt shown.
-		printf('alert("It seems another element was found, PLA hasnt been configured for this situation Component: "+component.value+" I:"+i);',$attribute->getName());
+		printf('alert("It seems another element was found, PLA hasnt been configured for this situation Component: "+component.value+" I:"+i);', htmlspecialchars($attribute->getName(),ENT_QUOTES));
 		echo "\n";
 		echo '}'."\n";
 		echo '</script>';
@@ -2475,14 +2475,14 @@ function deleteAttribute(attrName,friendlyName,i)
 			$default = $this->getServer()->getValue('appearance','pla_password_hash');
 
 		if (! $attribute->getPostValue())
-			printf('<input type="hidden" name="post_value[%s][]" value="%s" />',$attribute->getName(),$i);
+			printf('<input type="hidden" name="post_value[%s][]" value="%s" />', htmlspecialchars($attribute->getName()), htmlspecialchars($i));
 
 		printf('<select name="%s[%s][%s]" id="%s_%s_%s">',
-			$id,htmlspecialchars($attribute->getName()),$i,
-			$id,htmlspecialchars($attribute->getName()),$i);
+			$id,htmlspecialchars($attribute->getName()), htmlspecialchars($i),
+			$id,htmlspecialchars($attribute->getName()), htmlspecialchars($i));
 
 		foreach (password_types() as $v => $display)
-			printf('<option value="%s" %s>%s</option>',$v,($v == $default) ? 'selected="selected"' : '',$display);
+			printf('<option value="%s" %s>%s</option>', htmlspecialchars($v),($v == $default) ? 'selected="selected"' : '', htmlspecialchars($display));
 
 		echo '</select>';
 	}
@@ -2491,7 +2491,7 @@ function deleteAttribute(attrName,friendlyName,i)
 		$id = 'enc';
 
 		if (! $attribute->getPostValue())
-			printf('<input type="hidden" name="post_value[%s][]" value="%s" />',$attribute->getName(),$i);
+			printf('<input type="hidden" name="post_value[%s][]" value="%s" />', htmlspecialchars($attribute->getName()), htmlspecialchars($i));
 
 		switch ($attribute->getName()) {
 			case 'sambalmpassword' : $enc = 'lm'; break;
@@ -2502,8 +2502,8 @@ function deleteAttribute(attrName,friendlyName,i)
 		}
 
 		printf('<input type="hidden" name="%s[%s][%s]" id="%s_%s_%s" value="%s" />',
-			$id,htmlspecialchars($attribute->getName()),$i,
-			$id,htmlspecialchars($attribute->getName()),$i,$enc);
+		       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i),
+		       htmlspecialchars($id),htmlspecialchars($attribute->getName()), htmlspecialchars($i),$enc);
 	}
 
 	/** SELECTION ATTRIBUTE RENDERING **/

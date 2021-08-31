@@ -20,7 +20,7 @@ $request['page']->accept();
 $request['template'] = $request['page']->getTemplate();
 
 if (! $request['template']->getContainer() || ! $app['server']->dnExists($request['template']->getContainer()))
-	error(sprintf(_('The container you specified (%s) does not exist. Please try again.'),$request['template']->getContainer()),'error','index.php');
+	error(sprintf(_('The container you specified (%s) does not exist. Please try again.'), htmlspecialchars($request['template']->getContainer())),'error','index.php');
 
 # Check if the container is a leaf - we shouldnt really return a hit here, the template engine shouldnt have allowed a user to attempt to create an entry...
 $tree = get_cached_item($app['server']->getIndex(),'tree');
@@ -42,7 +42,7 @@ foreach ($request['template']->getAttributes() as $attribute) {
 	# Check that our Required Attributes have a value - we shouldnt really return a hit here, the template engine shouldnt have allowed this to slip through.
 	if ($attribute->isRequired() && ! count($attribute->getValues()))
 		error(sprintf(_('You left the value blank for required attribute (%s).'),
-			$attribute->getName(false)),'error','index.php');
+		              htmlspecialchars($attribute->getName(false))),'error','index.php');
 }
 
 # Check for unique attributes
@@ -50,7 +50,7 @@ $app['server']->checkUniqueAttrs($request['template']->getDN(),$request['templat
 
 $request['page']->drawTitle(_('Create LDAP Entry'));
 $request['page']->drawSubTitle(sprintf('%s: <b>%s</b>&nbsp;&nbsp;&nbsp;%s: <b>%s</b>',
-	_('Server'),$app['server']->getName(),_('Container'),$request['template']->getContainer()));
+	_('Server'), htmlspecialchars($app['server']->getName()),_('Container'), htmlspecialchars($request['template']->getContainer())));
 
 # Confirm the creation
 if (count($request['template']->getLDAPadd(true))) {
@@ -87,7 +87,7 @@ if (count($request['template']->getLDAPadd(true))) {
 		$counter++;
 
 		printf('<tr class="%s">',$counter%2 ? 'even' : 'odd');
-		printf('<td><b>%s</b></td>',$attribute->getFriendlyName());
+		printf('<td><b>%s</b></td>', htmlspecialchars($attribute->getFriendlyName()));
 
 		# Show NEW Values
 		echo '<td><span style="white-space: nowrap;">';
@@ -118,7 +118,7 @@ if (count($request['template']->getLDAPadd(true))) {
 
 	printf('<input type="submit" name="cancel" value="%s" %s/>',
 		_('Cancel'),
-		(isAjaxEnabled() ? sprintf('onclick="return ajDISPLAY(\'BODY\',\'cmd=template_engine&server_id=%s&container=%s\',\'%s\');"',$app['server']->getIndex(),$request['template']->getContainer(),_('Retrieving DN')) : ''));
+		(isAjaxEnabled() ? sprintf('onclick="return ajDISPLAY(\'BODY\',\'cmd=template_engine&server_id=%s&container=%s\',\'%s\');"',$app['server']->getIndex(), htmlspecialchars($request['template']->getContainer()),_('Retrieving DN')) : ''));
 
 	echo '</div>';
 	echo '</form>';

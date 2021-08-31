@@ -62,7 +62,7 @@ function pla_autoload($className) {
 		system_message(array(
 			'title'=>_('Generic Error'),
 			'body'=>sprintf('%s: %s [%s]',
-				__METHOD__,_('Called to load a class that cant be found'),$className),
+				__METHOD__,_('Called to load a class that cant be found'), htmlspecialchars($className)),
 			'type'=>'error'));
 }
 
@@ -157,7 +157,7 @@ function app_error_handler($errno,$errstr,$file,$lineno) {
 		case E_USER_NOTICE: $errtype = 'E_USER_NOTICE'; break;
 		case E_ALL: $errtype = 'E_ALL'; break;
 
-		default: $errtype = sprintf('%s: %s',_('Unrecognized error number'),$errno);
+		default: $errtype = sprintf('%s: %s',_('Unrecognized error number'), htmlspecialchars($errno));
 	}
 
 	# Take out extra spaces in error strings.
@@ -165,7 +165,7 @@ function app_error_handler($errno,$errstr,$file,$lineno) {
 
 	if ($errno == E_NOTICE) {
 		$body = '<table class="notice">';
-		$body .= sprintf('<tr><td>%s:</td><td><b>%s</b> (<b>%s</b>)</td></tr>',_('Error'),$errstr,$errtype);
+		$body .= sprintf('<tr><td>%s:</td><td><b>%s</b> (<b>%s</b>)</td></tr>',_('Error'), htmlspecialchars($errstr),$errtype);
 		$body .= sprintf('<tr><td>%s:</td><td><b>%s</b> %s <b>%s</b>, %s <b>%s</b></td></tr>',
 			_('File'),$file,_('line'),$lineno,_('caller'),$caller);
 		$body .= sprintf('<tr><td>Versions:</td><td>PLA: <b>%s</b>, PHP: <b>%s</b>, SAPI: <b>%s</b></td></tr>',
@@ -187,7 +187,7 @@ function app_error_handler($errno,$errstr,$file,$lineno) {
 	}
 
 	# If this is a more serious error, call the error call.
-	error(sprintf('%s: %s',$errtype,$errstr),'error',null,true,true);
+	error(sprintf('%s: %s',$errtype, htmlspecialchars($errstr)),'error',null,true,true);
 }
 
 /**
@@ -287,7 +287,7 @@ function check_config($config_file) {
 			$file = file($config_file);
 
 			$body = '<h3 class="title">Config file ERROR</h3>';
-			$body .= sprintf('<h3 class="subtitle">%s (%s) on line %s</h3>',$error_type,$error,$line_num);
+			$body .= sprintf('<h3 class="subtitle">%s (%s) on line %s</h3>',$error_type, htmlspecialchars($error),$line_num);
 
 			$body .= '<center>';
 			$body .= sprintf('Looks like your config file has an ERROR on line %s.<br />',$line_num);
@@ -303,7 +303,7 @@ function check_config($config_file) {
 				if ($i < 0)
 					continue;
 
-				$body .= sprintf('<b>%s</b>: %s<br />',$i+1,$file[$i]);
+				$body .= sprintf('<b>%s</b>: %s<br />',$i+1, htmlspecialchars($file[$i]));
 
 				if ($i+1 == $line_num)
 					$body .= '</div>';
@@ -611,7 +611,7 @@ function error($msg,$type='note',$redirect=null,$fatal=false,$backtrace=false) {
 			$_SESSION['backtrace'][$error]['file'] = isset($line['file']) ? $line['file'] : 'unknown';
 			$_SESSION['backtrace'][$error]['line'] = isset($line['line']) ? $line['line'] : 'unknown';
 			$body .= sprintf('<tr class="hightlight"><td colspan="2"><b><small>%s</small></b></td><td>%s (%s)</td></tr>',
-				_('File'),isset($line['file']) ? $line['file'] : $last['file'],isset($line['line']) ? $line['line'] : '');
+				_('File'), htmlspecialchars(isset($line['file']) ? $line['file'] : $last['file']), htmlspecialchars(isset($line['line']) ? $line['line'] : ''));
 
 			$_SESSION['backtrace'][$error]['function'] = $line['function'];
 			$body .= sprintf('<tr><td>&nbsp;</td><td><b><small>%s</small></b></td><td><small>%s',
@@ -670,7 +670,7 @@ function get_request($attr,$type='POST',$die=false,$default=null,$preventXSS=tru
 			$value = isset($_POST[$attr]) ? (is_array($_POST[$attr]) ? $_POST[$attr] : (empty($_POST['nodecode'][$attr]) ? rawurldecode($_POST[$attr]) : $_POST[$attr])) : $default;
 			break;
 	}
-	
+
 	if ($die && is_null($value))
 		system_message(array(
 			'title'=>_('Generic Error'),
@@ -1436,7 +1436,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 	if (! $server->getValue('auto_number','enable')) {
 		system_message(array(
 			'title'=>_('AUTO_NUMBER is disabled for this server'),
-			'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to get_next_number(), however, it is disabled for this server'),$attr),
+			'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to get_next_number(), however, it is disabled for this server'), htmlspecialchars($attr)),
 			'type'=>'warn'));
 
 		return false;
@@ -1447,7 +1447,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 		system_message(array(
 			'title'=>_('AUTO_NUMBER invalid login/password'),
 			'body'=>sprintf('%s (<b>%s</b>)',_('Unable to connect to LDAP server with the auto_number login/password, please check your configuration.'),
-				$server->getName()),
+			                htmlspecialchars($server->getName())),
 			'type'=>'warn'));
 
 		return false;
@@ -1472,7 +1472,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 	if (! $server->dnExists($query['base'])) {
 		system_message(array(
 			'title'=>_('No AUTO_NUMBER search_base exists for this server'),
-			'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to get_next_number(), however, the base to search does not exist for this server.'),$query['base']),
+			'body'=>sprintf('%s (<b>%s</b>)',_('A call was made to get_next_number(), however, the base to search does not exist for this server.'), htmlspecialchars($query['base'])),
 			'type'=>'warn'));
 
 		return false;
@@ -1481,7 +1481,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 	if (! is_string($attr) || ! $server->getSchemaAttribute($attr)) {
 		system_message(array(
 			'title'=>_('AUTO_NUMBER search attribute invalid'),
-			'body'=>sprintf('%s (<b>%s</b>)',_('The search attribute for AUTO_NUMBER is invalid, expecting a single valid attribute.'),$attr),
+			'body'=>sprintf('%s (<b>%s</b>)',_('The search attribute for AUTO_NUMBER is invalid, expecting a single valid attribute.'), htmlspecialchars($attr)),
 			'type'=>'warn'));
 
 		return false;
@@ -1558,7 +1558,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 				case '0':
 					system_message(array(
 						'title'=>_('AUTO_NUMBER pool filter didnt return any DNs'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('Please change your filter parameter, or check your auto_number,search_base configuration'),$query['filter']),
+						'body'=>sprintf('%s (<b>%s</b>)',_('Please change your filter parameter, or check your auto_number,search_base configuration'), htmlspecialchars($query['filter'])),
 						'type'=>'warn'));
 
 					return false;
@@ -1566,7 +1566,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 				default:
 					system_message(array(
 					'title'=>_('AUTO_NUMBER pool filter returned too many DNs'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('Please change your filter parameter, or check your auto_number,search_base configuration'),$query['filter']),
+						'body'=>sprintf('%s (<b>%s</b>)',_('Please change your filter parameter, or check your auto_number,search_base configuration'), htmlspecialchars($query['filter'])),
 						'type'=>'warn'));
 
 					return false;
@@ -1591,7 +1591,7 @@ function get_next_number($base,$attr,$increment=false,$filter=false,$startmin=nu
 		default:
 			system_message(array(
 				'title'=>_('Invalid AUTO_NUMBER mechanism'),
-				'body'=>sprintf('%s (<b>%s</b>)',_('Your config file specifies an unknown AUTO_NUMBER search mechanism.'),$server->getValue('auto_number','mechanism')),
+				'body'=>sprintf('%s (<b>%s</b>)',_('Your config file specifies an unknown AUTO_NUMBER search mechanism.'), htmlspecialchars($server->getValue('auto_number','mechanism'))),
 				'type'=>'warn'));
 
 			return false;
@@ -2016,11 +2016,11 @@ function ldap_error_msg($msg,$errnum) {
 	$errnum = ('0x'.str_pad(dechex($errnum),2,0,STR_PAD_LEFT));
 	$verbose_error = pla_verbose_error($errnum);
 
-	$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('LDAP said'),$msg);
+	$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('LDAP said'), htmlspecialchars($msg));
 
 	if ($verbose_error) {
-		$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s (%s)</td></tr>',_('Error number'),$errnum,$verbose_error['title']);
-		$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Description'),$verbose_error['desc']);
+		$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s (%s)</td></tr>',_('Error number'),$errnum, htmlspecialchars($verbose_error['title']));
+		$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Description'), htmlspecialchars($verbose_error['desc']));
 
 	} else {
 		$body .= sprintf('<tr><td><b>%s</b>:</td><td>%s</td></tr>',_('Error number'),$errnum);
@@ -2069,11 +2069,11 @@ function draw_jpeg_photo($server,$dn,$attr_name='jpegphoto',$index,$draw_delete_
 		system_message(array(
 			'title'=>_('Unable to retrieve image'),
 			'body'=>sprintf('%s %s',
-				_('Could not fetch jpeg data for attribute'),$attr_name),
+				_('Could not fetch jpeg data for attribute'), htmlspecialchars($attr_name)),
 			'type'=>'warn'));
 
 		# This should atleast generate some text that says "Image not available"
-		printf('<img src="view_jpeg_photo.php?location=session&attr=%s" alt="Photo" />',$attr_name);
+		printf('<img src="view_jpeg_photo.php?location=session&attr=%s" alt="Photo" />', htmlspecialchars($attr_name));
 
 		return;
 	}
@@ -2097,12 +2097,12 @@ function draw_jpeg_photo($server,$dn,$attr_name='jpegphoto',$index,$draw_delete_
 			if (! $outjpeg) {
 				system_message(array(
 					'title'=>_('Error writing to jpeg tmp directory'),
-					'body'=>sprintf(_('Please check jpeg,tmpdir is a writable directory in the phpLDAPadmin config.php'),$jpeg_temp_dir),
+					'body'=>sprintf(_('Please check jpeg,tmpdir is a writable directory in the phpLDAPadmin config.php'), htmlspecialchars($jpeg_temp_dir)),
 					'type'=>'warn'));
 
 			} elseif ($outjpeg < 6) {
 				system_message(array(
-					'title'=>sprintf('%s %s',$attr_name,_('contains errors')),
+					'title'=>sprintf('%s %s', htmlspecialchars($attr_name),_('contains errors')),
 					'body'=>_('It appears that the jpeg image may not be a jpeg image'),
 					'type'=>'warn'));
 
@@ -2126,7 +2126,7 @@ function draw_jpeg_photo($server,$dn,$attr_name='jpegphoto',$index,$draw_delete_
 		$img_height = $height;
 	}
 
-	$href = sprintf('view_jpeg_photo.php?dn=%s&index=%s&attr=%s',rawurlencode($dn),$index,$attr_name);
+	$href = sprintf('view_jpeg_photo.php?dn=%s&index=%s&attr=%s',rawurlencode($dn), htmlspecialchars($index), htmlspecialchars($attr_name));
 
 	printf('<acronym title="%s %s. %s x %s %s.">',number_format($outjpeg),_('bytes'),$width,$height,_('pixels'));
 
@@ -2142,7 +2142,7 @@ function draw_jpeg_photo($server,$dn,$attr_name='jpegphoto',$index,$draw_delete_
 	if ($draw_delete_buttons)
 		# <!-- JavaScript function deleteJpegPhoto() to be defined later by calling script -->
 		printf('<br/><a href="javascript:deleteAttribute(\'%s\');" style="color:red; font-size: 75%%">%s</a>',
-			$attr_name,_('Delete photo'));
+		       htmlspecialchars($attr_name,ENT_QUOTES),_('Delete photo'));
 }
 
 /**
@@ -2378,7 +2378,7 @@ function password_check($cryptedpassword,$plainpassword,$attribute='userpassword
 			}
 
 			break;
-                 
+
                 #BCRYPT hashed passwords
                 case 'bcrypt':
                         # Check php password_verify support before using it
@@ -2560,13 +2560,13 @@ function draw_chooser_link($form,$element,$include_choose_text=true,$rdn='none')
 	if (DEBUG_ENABLED && (($fargs=func_get_args())||$fargs='NOARGS'))
 		debug_log('Entered (%%)',1,0,__FILE__,__LINE__,__METHOD__,$fargs);
 
-	$href = sprintf("javascript:dnChooserPopup('%s','%s','%s');",$form,$element,$rdn == 'none' ? '' : rawurlencode($rdn));
+	$href = sprintf("javascript:dnChooserPopup('%s','%s','%s');", htmlspecialchars($form,ENT_QUOTES),htmlspecialchars($element,ENT_QUOTES),$rdn == 'none' ? '' : rawurlencode($rdn));
 	$title = _('Click to popup a dialog to select an entry (DN) graphically');
 
-	printf('<a href="%s" title="%s"><img class="chooser" src="%s/find.png" alt="Find" /></a>',$href,$title,IMGDIR);
+	printf('<a href="%s" title="%s"><img class="chooser" src="%s/find.png" alt="Find" /></a>',$href, htmlspecialchars($title),IMGDIR);
 
 	if ($include_choose_text)
-		printf('<span class="x-small"><a href="%s" title="%s">%s</a></span>',$href,$title,_('browse'));
+		printf('<span class="x-small"><a href="%s" title="%s">%s</a></span>',$href, htmlspecialchars($title),_('browse'));
 }
 
 /**
@@ -2978,7 +2978,7 @@ function server_select_list($selected=null,$logged_on=false,$name='index',$isVis
 		debug_log('Entered (%%)',1,0,__FILE__,__LINE__,__METHOD__,$fargs);
 
 	$count = 0;
-	$server_menu_html = sprintf('<select name="%s" id="%s" %s>',$name,$name,$js);
+	$server_menu_html = sprintf('<select name="%s" id="%s" %s>', htmlspecialchars($name), htmlspecialchars($name),$js);
 
 	foreach ($_SESSION[APPCONFIG]->getServerList($isVisible) as $index => $server) {
 		if ($server->isVisible()) {
@@ -2988,7 +2988,7 @@ function server_select_list($selected=null,$logged_on=false,$name='index',$isVis
 
 			$count++;
 			$server_menu_html .= sprintf('<option value="%s" %s>%s</option>',
-				$server->getIndex(),($server->getIndex() == $selected ? 'selected="selected"' : ''),$server->getName());
+				$server->getIndex(),($server->getIndex() == $selected ? 'selected="selected"' : ''), htmlspecialchars($server->getName()));
 
 			# We will set this variable, in case there is only 1 hit.
 			$selected_server = $server;
@@ -3002,7 +3002,7 @@ function server_select_list($selected=null,$logged_on=false,$name='index',$isVis
 
 	elseif ($count)
 		return sprintf('%s <input type="hidden" name="%s" value="%s" />',
-			$selected_server->getName(),$name,$selected_server->getIndex());
+		               htmlspecialchars($selected_server->getName()), htmlspecialchars($name),$selected_server->getIndex());
 
 	else
 		return '';

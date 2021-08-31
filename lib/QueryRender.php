@@ -79,7 +79,7 @@ class QueryRender extends PageRender {
 
 		$baseDNs = $server->getBaseDN();
 
-		printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',JSDIR);
+		printf('<script type="text/javascript" src="%sdnChooserPopup.js"></script>',htmlspecialchars(JSDIR));
 		echo '<form action="cmd.php" id="advanced_search_form">';
 		echo '<div>';
 		echo '<input type="hidden" name="cmd" value="query_engine" />';
@@ -101,9 +101,9 @@ class QueryRender extends PageRender {
 
 			foreach ($templates->getTemplates() as $template)
 				printf('<option value="%s" %s>%s</option>',
-					$template->getID(),
+				       htmlspecialchars($template->getID()),
 					($this->template_id == $template->getID() ? 'selected="selected"' : ''),
-					$template->getDescription());
+					   htmlspecialchars($template->getDescription()));
 			echo '</select>';
 			echo '</td>';
 			echo '</tr>';
@@ -145,7 +145,7 @@ class QueryRender extends PageRender {
 		echo '<table border="0"><tr>';
 
 		printf('<td>%s</td>',_('Base DN'));
-		printf('<td><input type="text" name="base" value="%s" style="width: 200px" id="base" />',count($baseDNs) == 1 ? $baseDNs[0] : '');
+		printf('<td><input type="text" name="base" value="%s" style="width: 200px" id="base" />',count($baseDNs) == 1 ? htmlspecialchars($baseDNs[0]) : '');
 
 		draw_chooser_link('advanced_search_form','base');
 
@@ -185,7 +185,7 @@ class QueryRender extends PageRender {
 			_('A list of attributes to display in the results (comma-separated)'),_('Show Attributes'));
 
 		printf('<td><input type="text" name="display_attrs" style="width: 200px" value="%s" /></td>',
-			implode(', ',$_SESSION[APPCONFIG]->getValue('search','result_attributes')));
+		       htmlspecialchars(implode(', ',$_SESSION[APPCONFIG]->getValue('search','result_attributes'))));
 		echo '</tr>';
 
 		echo '<tr>';
@@ -246,7 +246,7 @@ class QueryRender extends PageRender {
 				$show = ($counter === 1 ? $this->getAjaxRef($base) : null);
 
 			printf('<div id="DN%s" style="display: %s">',
-				$this->getAjaxRef($base), ($show == $this->getAjaxRef($base) ? 'block' : 'none'));
+			       htmlspecialchars($this->getAjaxRef($base)), ($show == $this->getAjaxRef($base) ? 'block' : 'none'));
 
 			echo '<table class="result_box" border="0" width="100%">';
 			echo '<tr><td>';
@@ -269,7 +269,7 @@ class QueryRender extends PageRender {
 						echo '<table class="result" border="0">';
 
 						echo '<tr class="list_title">';
-						printf('<td class="icon"><img src="%s/%s" alt="icon" /></td>',IMGDIR,get_icon($server->getIndex(),$dndetails['dn']));
+						printf('<td class="icon"><img src="%s/%s" alt="icon" /></td>',IMGDIR, htmlspecialchars(get_icon($server->getIndex(),$dndetails['dn'])));
 
 						printf('<td colspan="2"><a href="cmd.php?cmd=template_engine&amp;server_id=%s&amp;dn=%s">%s</a></td>',
 							$server->getIndex(),$this->template->getDNEncode(),htmlspecialchars(get_rdn($dndetails['dn'])));
@@ -329,7 +329,7 @@ class QueryRender extends PageRender {
 					printf('<input type="hidden" name="server_id" value="%s" />',$server->getIndex());
 
 					foreach ($this->template->resultsdata[$base]['attrs'] as $attr)
-						printf('<input type="hidden" name="attrs[]" value="%s" />',$attr);
+						printf('<input type="hidden" name="attrs[]" value="%s" />', htmlspecialchars($attr));
 
 					echo '</div>';
 
@@ -367,7 +367,7 @@ class QueryRender extends PageRender {
 						$href = sprintf('cmd=template_engine&server_id=%s&dn=%s',$server->getIndex(),$this->template->getDNEncode());
 						printf('<td class="icon"><a href="cmd.php?%s"><img src="%s/%s" alt="icon" /></a></td>',
 							htmlspecialchars($href),
-							IMGDIR,get_icon($server->getIndex(),$dndetails['dn']));
+							IMGDIR, htmlspecialchars(get_icon($server->getIndex(),$dndetails['dn'])));
 
 						# We'll clone our attribute factory attributes, since we need to add the values to them for rendering.
 						foreach (explode(',',$ado) as $attr) {
@@ -409,7 +409,7 @@ class QueryRender extends PageRender {
 						printf('<td colspan="%s">',2+count(explode(',',$ado)));
 
 						foreach ($mass_actions as $display => $action)
-							printf('<button type="submit" name="cmd" value="%s">%s</button>&nbsp;&nbsp;',$action,$display);
+							printf('<button type="submit" name="cmd" value="%s">%s</button>&nbsp;&nbsp;', htmlspecialchars($action), htmlspecialchars($display));
 
 						echo '</td>';
 						echo '</tr>';
@@ -423,7 +423,7 @@ class QueryRender extends PageRender {
 					break;
 
 				default:
-					printf('Have ID [%s], run this query for page [%s]',$this->template_id,$this->page);
+					printf('Have ID [%s], run this query for page [%s]', htmlspecialchars($this->template_id), htmlspecialchars($this->page));
 			}
 
 			echo '</td></tr>';
@@ -433,20 +433,20 @@ class QueryRender extends PageRender {
 		}
 
 		if (get_request('format','REQUEST',false,'table') == 'table')
-			printf('<script type="text/javascript" src="%sCheckAll.js"></script>',JSDIR);
+			printf('<script type="text/javascript" src="%sCheckAll.js"></script>',htmlspecialchars(JSDIR));
 	}
 
 	public function drawSubTitle($subtitle=null) {
 		if (is_null($subtitle)) {
 			$server = $this->getServer();
-	
-			$subtitle = sprintf('%s: <b>%s</b>',_('Server'),$server->getName());
+
+			$subtitle = sprintf('%s: <b>%s</b>',_('Server'), htmlspecialchars($server->getName()));
 
 			if ($this->template) {
 				$subtitle .= '<br />';
-				$subtitle .= sprintf('%s: <b>%s</b>',('Query'),$this->template->getID() != 'none' ? $this->template->getTitle() : _('Default'));
+				$subtitle .= sprintf('%s: <b>%s</b>',('Query'),$this->template->getID() != 'none' ? htmlspecialchars($this->template->getTitle()) : _('Default'));
 				if ($this->template->getName())
-					$subtitle .= sprintf(' (<b>%s</b>)',$this->template->getName(false));
+					$subtitle .= sprintf(' (<b>%s</b>)', htmlspecialchars($this->template->getName(false)));
 			}
 		}
 
@@ -480,7 +480,7 @@ class QueryRender extends PageRender {
 		echo 'var $items = new Array();';
 		$counter = 0;
 		foreach ($this->template->results as $base => $results)
-			printf("items[%s] = '%s';",$counter++,$this->getAjaxRef($base));
+			printf("items[%s] = '%s';",$counter++, htmlspecialchars($this->getAjaxRef($base),ENT_QUOTES));
 		echo 'return items;';
 		echo '}</script>';
 		echo "\n\n";
@@ -493,8 +493,8 @@ class QueryRender extends PageRender {
 				$show = ($counter++ === 0 ? $this->getAjaxRef($base) : null);
 
 			printf('<td id="CTL%s" onclick="return ajSHOWTHIS(\'DN\',\'%s\',\'CTL\');" style="background-color: %s;">%s</td>',
-				$this->getAjaxRef($base),
-				$this->getAjaxRef($base),
+			       htmlspecialchars($this->getAjaxRef($base)),
+			       htmlspecialchars($this->getAjaxRef($base),ENT_QUOTES),
 				($show == $this->getAjaxRef($base) ? '#F0F0F0' : '#E0E0E0'),
 				htmlspecialchars($base));
 		}
@@ -510,12 +510,12 @@ class QueryRender extends PageRender {
 
 		echo '<tr>';
 		printf('<td>%s: <b>%s</b><br/><br/><div class="execution_time">(%s %s)</div></td>',_('Entries found'),
-			number_format($results),$this->template->resultsdata[$base]['time'],_('seconds'));
+			number_format($results), htmlspecialchars($this->template->resultsdata[$base]['time']),_('seconds'));
 
 		if ($_SESSION[APPCONFIG]->isCommandAvailable('script','export') && $_SESSION[APPCONFIG]->isCommandAvailable('script','export_form')) {
 			$href = htmlspecialchars(sprintf('cmd.php?cmd=export_form&server_id=%s&scope=%s&dn=%s&filter=%s&attributes=%s',
-				$server->getIndex(),$this->template->resultsdata[$base]['scope'],
-				$base,rawurlencode($this->template->resultsdata[$base]['filter']),
+				$server->getIndex(), rawurlencode($this->template->resultsdata[$base]['scope']),
+				rawurlencode($base),rawurlencode($this->template->resultsdata[$base]['filter']),
 				rawurlencode(implode(', ',$this->template->resultsdata[$base]['attrs']))));
 
 			printf('<td style="text-align: right; width: 85%%"><small>[ <a href="%s"><img src="%s/save.png" alt="Save" /> %s</a> ]</small>',

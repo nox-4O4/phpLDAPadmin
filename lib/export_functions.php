@@ -67,7 +67,7 @@ class Exporter {
 
 			default:
 				system_message(array(
-					'title'=>sprintf('%s %s',_('Unknown Export Type'),$this->template_id),
+					'title'=>sprintf('%s %s',_('Unknown Export Type'), htmlspecialchars($this->template_id)),
 					'body'=>_('phpLDAPadmin has not been configured for that export type'),
 					'type'=>'warn'),'index.php');
 				die();
@@ -397,7 +397,7 @@ class ExportDSML extends Export {
 					$output .= sprintf('%s<objectClass>%s',$indent['att'],$this->br);
 
 					foreach ($dndetails['objectClass'] as $ocValue)
-						$output .= sprintf('%s<oc-value>%s</oc-value>%s',$indent['val'],$ocValue,$this->br);
+						$output .= sprintf('%s<oc-value>%s</oc-value>%s',$indent['val'], htmlspecialchars($ocValue),$this->br);
 
 					$output .= sprintf('%s</objectClass>%s',$indent['att'],$this->br);
 					unset($dndetails['objectClass']);
@@ -408,7 +408,7 @@ class ExportDSML extends Export {
 					if (! is_array($attr))
 						$attr = array($attr);
 
-					$output .= sprintf('%s<attr name="%s">%s',$indent['att'],$key,$this->br);
+					$output .= sprintf('%s<attr name="%s">%s',$indent['att'], htmlspecialchars($key),$this->br);
 
 					# If the attribute is binary, set the flag $binary_mode to true
 					$binary_mode = $server->isAttrBinary($key) ? 1 : 0;

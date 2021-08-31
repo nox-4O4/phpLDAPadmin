@@ -440,7 +440,7 @@ class Horde_Cipher_blowfish {
 	if (! is_array($unpack))
 		error(
 			sprintf('BLOWFISH: decryptBock()<br>We expected unpack to produce an array, but instead it produced [%s]. This function was entered with (%s,%s). If you think that this is a bug, then please tell the PLA developers how you got here. You are using PLA [%s,%s]',
-				serialize($unpack),$block,$key,app_version(),phpversion()),'error','index.php');
+			        htmlspecialchars(serialize($unpack)), htmlspecialchars($block), htmlspecialchars($key),app_version(),phpversion()),'error','index.php');
 
         list($L, $R) = array_values($unpack);
 

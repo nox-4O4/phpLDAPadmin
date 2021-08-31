@@ -109,7 +109,7 @@ class Template extends xmlTemplate {
 								elseif (! is_object($soc) && ! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 									system_message(array(
 										'title'=>_('Automatically removed objectClass from template'),
-										'body'=>sprintf('%s: <b>%s</b> %s',$this->getTitle(),$details,_('removed from template as it is not defined in the schema')),
+										'body'=>sprintf('%s: <b>%s</b> %s', htmlspecialchars($this->getTitle()), htmlspecialchars($details),_('removed from template as it is not defined in the schema')),
 										'type'=>'warn'));
 							}
 
@@ -172,7 +172,7 @@ class Template extends xmlTemplate {
 					if (! in_array($xml_key,$allowed_arrays) && is_array($xml_value)) {
 						debug_dump(array(__METHOD__,'key'=>$xml_key,'value'=>$xml_value));
 						error(sprintf(_('In the XML file (%s), [%s] is an array, it must be a string.'),
-							$this->filename,$xml_key),'error');
+							$this->filename, htmlspecialchars($xml_key)),'error');
 					}
 
 					$this->$xml_key = $xml_value;
@@ -200,7 +200,7 @@ class Template extends xmlTemplate {
 			if (! isset($this->$key)
 				|| (! is_array($this->$key) && ! trim($this->$key))) {
 
-				$this->setInvalid(sprintf(_('Missing %s in the XML file.'),$key));
+				$this->setInvalid(sprintf(_('Missing %s in the XML file.'), htmlspecialchars($key)));
 				break;
 			}
 		}
@@ -216,7 +216,7 @@ class Template extends xmlTemplate {
 			if (! is_null($attribute))
 				$attribute->setRDN($counter++);
 			elseif ($this->isType('creation'))
-				$this->setInvalid(sprintf(_('Missing RDN attribute %s in the XML file.'),$key));
+				$this->setInvalid(sprintf(_('Missing RDN attribute %s in the XML file.'), htmlspecialchars($key)));
 		}
 	}
 
@@ -269,7 +269,7 @@ class Template extends xmlTemplate {
 			if (! $server->dnExists($this->dn))
 				system_message(array(
 					'title'=>__METHOD__,
-					'body'=>sprintf('DN (%s) didnt exist in LDAP?',$this->dn),
+					'body'=>sprintf('DN (%s) didnt exist in LDAP?', htmlspecialchars($this->dn)),
 					'type'=>'info'));
 
 			$rdnarray = rdn_explode(strtolower(get_rdn(dn_escape($this->dn))));
@@ -817,9 +817,9 @@ class Template extends xmlTemplate {
 				system_message(array(
 					'title'=>_('RDN attribute sequence already defined'),
 					'body'=>sprintf('%s %s',
-						sprintf(_('There is a problem in template [%s].'),$this->getName()),
+						sprintf(_('There is a problem in template [%s].'), htmlspecialchars($this->getName())),
 						sprintf(_('RDN attribute sequence [%s] is already used by attribute [%s] and cant be used by attribute [%s] also.'),
-							$attribute->isRDN(),$return[$attribute->isRDN()],$attribute->getName())),
+						        htmlspecialchars($attribute->isRDN()), htmlspecialchars($return[$attribute->isRDN()]), htmlspecialchars($attribute->getName()))),
 					'type'=>'error'),'index.php');
 
 			$return[$attribute->isRDN()] = $attribute->getName();
@@ -1148,7 +1148,7 @@ class Template extends xmlTemplate {
 				if (! preg_match('/;/',$arg)) {
 					system_message(array(
 						'title'=>_('Problem with autoFill() in template'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('There is only 1 argument, when there should be two'),$attribute->getName(false)),
+						'body'=>sprintf('%s (<b>%s</b>)',_('There is only 1 argument, when there should be two'), htmlspecialchars($attribute->getName(false))),
 						'type'=>'warn'));
 
 					return;
@@ -1220,13 +1220,13 @@ class Template extends xmlTemplate {
 						$attribute->js['autoFill'] .= sprintf("   %s = %s.split(':')[%s];\n",$match_attr,$match_attr,$tok_idx);
 
 					} elseif (strstr($match_mod,'K')) {
-						preg_match_all('/([0-9]+)/',trim($match_subst),$substrarray); 
-						if (isset($substrarray[1][0])) { 
-							$tok_idx = $substrarray[1][0]; 
-						} else { 
-							$tok_idx = '0'; 
-						} 
-						$attribute->js['autoFill'] .= sprintf("   %s = %s.split(' ')[%s];\n",$match_attr,$match_attr,$tok_idx); 
+						preg_match_all('/([0-9]+)/',trim($match_subst),$substrarray);
+						if (isset($substrarray[1][0])) {
+							$tok_idx = $substrarray[1][0];
+						} else {
+							$tok_idx = '0';
+						}
+						$attribute->js['autoFill'] .= sprintf("   %s = %s.split(' ')[%s];\n",$match_attr,$match_attr,$tok_idx);
 
 					} else {
 						preg_match_all('/([0-9]*)-([0-9]*)/',trim($match_subst),$substrarray);
@@ -1380,7 +1380,7 @@ class Template extends xmlTemplate {
 				if (! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 					system_message(array(
 						'title'=>_('Automatically removed attribute from template'),
-						'body'=>sprintf('%s: <b>%s</b> %s',$this->getTitle(),$attribute->getName(false),_('removed from template as it is not defined by an ObjectClass')),
+						'body'=>sprintf('%s: <b>%s</b> %s', htmlspecialchars($this->getTitle()), htmlspecialchars($attribute->getName(false)),_('removed from template as it is not defined by an ObjectClass')),
 						'type'=>'warn'));
 			}
 	}

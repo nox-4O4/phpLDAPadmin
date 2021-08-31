@@ -54,7 +54,7 @@ foreach ($app['server']->getBaseDN() as $base) {
 
 usort($possible_values,'pla_compare_dns');
 
-$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Modify group'),get_rdn($request['dn'])));
+$request['page']->drawTitle(sprintf('%s <b>%s</b>',_('Modify group'), htmlspecialchars(get_rdn($request['dn']))));
 $request['page']->drawSubTitle();
 
 printf('%s <b>%s</b> %s <b>%s</b>:',
@@ -107,7 +107,7 @@ switch ($request['attr']) {
 			$possible = sprintf('(,%s,)',$matches[1]);
 
 			if (! in_array($possible,$current_members))
-				printf('<option>%s</option>',$possible);
+				printf('<option>%s</option>', htmlspecialchars($possible));
 		}
 
 		break;
@@ -115,7 +115,7 @@ switch ($request['attr']) {
 	case ('memberuid' || 'member' || 'uniquemember'):
 		foreach ($possible_members as $possible) {
 			if (! in_array($possible,$current_members))
-				printf('<option>%s</option>',$possible);
+				printf('<option>%s</option>', htmlspecialchars($possible));
 		}
 
 		break;
@@ -174,5 +174,5 @@ echo '</td></tr>';
 
 echo '</table>';
 echo '</form>';
-printf('<script type="text/javascript" src="%smodify_member.js"></script>',JSDIR);
+printf('<script type="text/javascript" src="%smodify_member.js"></script>', htmlspecialchars(JSDIR));
 ?>

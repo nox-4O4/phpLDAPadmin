@@ -443,7 +443,7 @@ class Attribute {
 				$this->$index = $value;
 			else {
 				debug_dump($this);
-				debug_dump_backtrace(sprintf('Unknown property (%s) with value (%s) for (%s)',$index,$value,$this->getName()),1);
+				debug_dump_backtrace(sprintf('Unknown property (%s) with value (%s) for (%s)', htmlspecialchars($index), htmlspecialchars($value), htmlspecialchars($this->getName())),1);
 			}
 		}
 	}
@@ -544,7 +544,7 @@ class Attribute {
 		if (DEBUG_ENABLED && (($fargs=func_get_args())||$fargs='NOARGS'))
 			debug_log('Entered (%%)',5,1,__FILE__,__LINE__,__METHOD__,$fargs,$this->icon);
 
-		return $this->icon ? sprintf('%s/%s',IMGDIR,$this->icon) : '';
+		return $this->icon ? sprintf('%s/%s', IMGDIR, htmlspecialchars($this->icon)) : '';
 	}
 
 	public function getHint() {
@@ -721,7 +721,7 @@ class Attribute {
 					case 'helper':
 						if (! isset($values['post']) && ! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 							system_message(array(
-								'title'=>sprintf('%s [<i>%s</i>]',_('Missing [post] setting in XML file'),$index),
+								'title'=>sprintf('%s [<i>%s</i>]',_('Missing [post] setting in XML file'), htmlspecialchars($index)),
 								'body'=>_('[helper] needs an accompanying [post] action.'),
 								'type'=>'warn'));
 
@@ -736,8 +736,8 @@ class Attribute {
 							if (! in_array($i,array('default','display','id','value'))) {
 								if (! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 									system_message(array(
-										'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'),$i),
-										'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting for helper will be ignored.'),$detail),
+										'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'), htmlspecialchars($i)),
+										'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting for helper will be ignored.'), htmlspecialchars($detail)),
 										'type'=>'warn'));
 
 								unset($value[$i]);
@@ -758,8 +758,8 @@ class Attribute {
 					case 'type':
 						if (! in_array($value,array('password','multiselect','select','textarea')) && ! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 							system_message(array(
-								'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'),$index),
-								'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting will be ignored.'),$value),
+								'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'), htmlspecialchars($index)),
+								'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting will be ignored.'), htmlspecialchars($value)),
 								'type'=>'warn'));
 
 						break;
@@ -772,8 +772,8 @@ class Attribute {
 						} else
 							if (! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 								system_message(array(
-									'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'),$index),
-									'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting will be ignored.'),$value),
+									'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'), htmlspecialchars($index)),
+									'body'=>sprintf('%s <small>[%s]</small>',_('Unknown XML type setting will be ignored.'), htmlspecialchars($value)),
 									'type'=>'warn'));
 
 					case 'value':
@@ -782,7 +782,7 @@ class Attribute {
 								if (! $this->haveMoreValues()) {
 									system_message(array(
 									'title'=>_('Automatically removed attribute values from template'),
-										'body'=>sprintf('%s <small>[%s]</small>',_('Template defines more values than can be accepted by attribute.'),$this->getName(true)),
+										'body'=>sprintf('%s <small>[%s]</small>',_('Template defines more values than can be accepted by attribute.'), htmlspecialchars($this->getName(true))),
 										'type'=>'warn'));
 
 									$this->clearValue();
@@ -835,8 +835,8 @@ class Attribute {
 					default:
 						if (! $_SESSION[APPCONFIG]->getValue('appearance','hide_template_warning'))
 							system_message(array(
-								'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'),$index),
-								'body'=>sprintf('%s <small>[%s]</small>',_('Unknown attribute setting will be ignored.'),serialize($value)),
+								'title'=>sprintf('%s [<i>%s</i>]',_('Unknown XML setting'), htmlspecialchars($index)),
+								'body'=>sprintf('%s <small>[%s]</small>',_('Unknown attribute setting will be ignored.'), htmlspecialchars(serialize($value))),
 								'type'=>'warn'));
 				}
 
@@ -911,7 +911,7 @@ class Attribute {
 				return false;
 
 		} else
-			debug_dump_backtrace(sprintf('Unknown JS request %s',$type),1);
+			debug_dump_backtrace(sprintf('Unknown JS request %s', htmlspecialchars($type)),1);
 	}
 }
 ?>

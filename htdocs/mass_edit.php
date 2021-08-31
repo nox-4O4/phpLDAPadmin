@@ -61,7 +61,7 @@ if (! count($request['page']))
 
 # We'll render this forms Title with the first DN's object.
 $request['page'][0]->drawTitle(_('Bulk edit the following DNs'));
-$request['page'][0]->drawSubTitle(sprintf('%s: <b>%s</b>',_('Server'),$app['server']->getName()));
+$request['page'][0]->drawSubTitle(sprintf('%s: <b>%s</b>',_('Server'), htmlspecialchars($app['server']->getName())));
 
 echo '<form action="cmd.php" method="post">';
 echo '<div>';
@@ -69,7 +69,7 @@ echo '<input type="hidden" name="cmd" value="mass_update" />';
 printf('<input type="hidden" name="server_id" value="%s" />',$app['server']->getIndex());
 
 foreach ($request['page'] as $j => $page)
-	printf('<input type="hidden" name="dn[%s]" value="%s" />',$j,$page->getTemplate()->getDN());
+	printf('<input type="hidden" name="dn[%s]" value="%s" />',$j, htmlspecialchars($page->getTemplate()->getDN()));
 
 echo '</div>';
 
@@ -91,7 +91,7 @@ foreach ($request['page'] as $j => $page) {
 
 	printf('<tr class="%s">',$counter++%2==0?'even':'odd');
 	printf('<td><span style="white-space: nowrap;"><acronym title="%s"><b>%s</b>...</acronym></span></td>',
-		$template->getDN(),substr($template->getDN(),0,20));
+	       htmlspecialchars($template->getDN()), htmlspecialchars(substr($template->getDN(),0,20)));
 
 	foreach ($attrcols as $attrcol) {
 		$attribute = $template->getAttribute($attrcol->getName());

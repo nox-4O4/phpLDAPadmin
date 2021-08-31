@@ -145,7 +145,7 @@ class ldap_pla extends ldap {
 			default:
 				system_message(array(
 					'title'=>_('Unknown request for Object value.'),
-					'body'=>sprintf(_('Attempt to obtain value %s from %s'),$key,get_class($this)),
+					'body'=>sprintf(_('Attempt to obtain value %s from %s'), htmlspecialchars($key),get_class($this)),
 					'type'=>'error'));
 		}
 	}
@@ -464,7 +464,7 @@ class ldap_pla extends ldap {
 					unset($attrs[$attr]);
 					system_message(array(
 						'title'=>_('Attribute not added'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_add prevented attribute from being added'),$attr),
+						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_add prevented attribute from being added'), htmlspecialchars($attr)),
 						'type'=>'warn'));
 
 				} else
@@ -478,7 +478,7 @@ class ldap_pla extends ldap {
 					unset($attrs[$attr]);
 					system_message(array(
 						'title'=>_('Attribute not modified'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_modify prevented attribute from being modified'),$attr),
+						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_modify prevented attribute from being modified'), htmlspecialchars($attr)),
 						'type'=>'warn'));
 
 				} else {
@@ -494,7 +494,7 @@ class ldap_pla extends ldap {
 					unset($attrs[$attr]);
 					system_message(array(
 						'title'=>_('Attribute not deleted'),
-						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_delete prevented attribute from being deleted'),$attr),
+						'body'=>sprintf('%s (<b>%s</b>)',_('Hook pre_attr_delete prevented attribute from being deleted'), htmlspecialchars($attr)),
 						'type'=>'warn'));
 
 				} else
@@ -531,7 +531,7 @@ class ldap_pla extends ldap {
 									break;
 
 								default:
-									debug_dump_backtrace(sprintf('Unkown mode %s',$mode),1);
+									debug_dump_backtrace(sprintf('Unkown mode %s', htmlspecialchars($mode)),1);
 							}
 			} else {
 				system_message(array(
@@ -589,7 +589,7 @@ class ldap_pla extends ldap {
 			system_message(array(
 				'title'=>_('UNIQUE invalid login/password'),
 				'body'=>sprintf('%s (<b>%s</b>)',_('Unable to connect to LDAP server with the unique login/password, please check your configuration.'),
-					$this->getName()),
+				                htmlspecialchars($this->getName())),
 				'type'=>'warn'));
 
 			return false;

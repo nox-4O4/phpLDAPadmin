@@ -11,10 +11,10 @@ if (! isset($_SESSION['backtrace'][$index]))
 $line = $_SESSION['backtrace'][$index];
 echo '<table class="result_table">';
 printf('<tr class="hightlight"><td colspan="2"><b><small>%s</small></b></td><td>%s (%s)</td></tr>',
-	_('File'),isset($line['file']) ? $line['file'] : $last['file'],isset($line['line']) ? $line['line'] : '');
+	_('File'), htmlspecialchars(isset($line['file']) ? $line['file'] : $last['file']), htmlspecialchars(isset($line['line']) ? $line['line'] : ''));
 
 printf('<tr><td>&nbsp;</td><td><b><small>%s</small></b></td>',
-	_('Function'),$line['function']);
+	_('Function'), htmlspecialchars($line['function']));
 
 echo '<td><small><pre>';
 print_r($line['args']);

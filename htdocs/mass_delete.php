@@ -42,7 +42,7 @@ foreach ($request['dn'] as $dn) {
 }
 
 printf('<h3 class="title">%s</h3>',_('Mass Delete'));
-printf('<h3 class="subtitle">%s: <b>%s</b></h3>',_('Server'),$app['server']->getName());
+printf('<h3 class="subtitle">%s: <b>%s</b></h3>',_('Server'), htmlspecialchars($app['server']->getName()));
 echo "\n";
 
 echo '<center>';
@@ -54,7 +54,7 @@ else
 	printf('<tr><td colspan="4"><b>%s</b></td></tr>',_('Are you sure you want to permanently delete these objects?'));
 
 echo '<tr><td colspan="4">&nbsp;</td></tr>';
-printf('<tr><td style="width: 10%%;">%s:</td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',_('Server'),$app['server']->getName());
+printf('<tr><td style="width: 10%%;">%s:</td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',_('Server'), htmlspecialchars($app['server']->getName()));
 
 foreach ($request['parent'] as $dn)
 	printf('<tr><td style="width: 10%%;"><acronym title="%s">%s</acronym></td><td colspan="3" style="width: 75%%;"><b>%s</b></td></tr>',
